@@ -1,0 +1,9 @@
+[env]
+WINIT_X11_SCALE_FACTOR = "2.0"
+
+[font]
+size = 15.0
+
+[font.normal]
+family = "PragmataPro Mono"
+style = "Regular"
