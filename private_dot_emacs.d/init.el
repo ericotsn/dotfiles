@@ -328,6 +328,8 @@ edit proposed by the server."
   (setopt corfu-preselect 'prompt)
   (setopt corfu-quit-no-match 'separator)
 
+  (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter)
+
   ;; Free the RET key for less intrusive behavior
   (keymap-unset corfu-map "RET")
 
@@ -491,7 +493,10 @@ edit proposed by the server."
   (setopt modus-themes-to-toggle '(modus-operandi modus-vivendi))
 
   (setopt modus-themes-common-palette-overrides
-          `((fg-region unspecified)))
+          '((fg-region unspecified)))
+
+  (setopt modus-themes-completions
+          '((selection . (regular))))
 
   (defun my/modus-themes-flymake-faces (&rest _)
     (modus-themes-with-colors
