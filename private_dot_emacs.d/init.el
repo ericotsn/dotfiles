@@ -363,6 +363,7 @@ edit proposed by the server."
 ;;;; Embark
 
 (use-package embark
+  :demand t
   :bind (("C-." . embark-act)
          ("M-." . embark-dwim)
          ("C-h b" . embark-bindings)
@@ -482,6 +483,8 @@ edit proposed by the server."
 ;;;; Modus themes
 
 (use-package modus-themes
+  :demand t
+  :bind ("C-c t t" . modus-themes-toggle)
   :config
   (setopt modus-themes-italic-constructs t)
   (setopt modus-themes-prompts '(bold))
@@ -498,8 +501,6 @@ edit proposed by the server."
        `(flymake-warning-echo-at-eol ((,c :foreground ,yellow-cooler :background ,bg-yellow-nuanced))))))
 
   (add-hook 'modus-themes-post-load-hook #'my/modus-themes-flymake-faces)
-
-  (keymap-global-set "C-c t t" #'modus-themes-toggle)
 
   (modus-themes-load-theme (cadr modus-themes-to-toggle)))
 
