@@ -35,4 +35,4 @@
 (setq frame-title-format
       '(:eval (if buffer-file-name default-directory "%b")))
 
-(set-face-attribute 'default nil :family "PragmataPro Liga" :height 150)
+(set-face-attribute 'default nil :family "PragmataPro Mono" :height 150)

@@ -555,13 +555,6 @@ edit proposed by the server."
   (keymap-unset org-mode-map "C-,")
   (keymap-unset org-mode-map "C-c C-j"))
 
-;;;; PragmataPro mode
-
-(use-package pragmatapro-mode
-  :hook (prog-mode . pragmatapro-mode)
-  :config
-  (setopt pragmatapro-enable-ligatures-in-comments t))
-
 ;;;; Vertico
 
 (use-package vertico
