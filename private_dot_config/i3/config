@@ -2,7 +2,7 @@ set $mod Mod1
 
 font pango:monospace 8
 
-# Hide window titles for tiled windows
+# Hide window titles for tiled windows.
 for_window [tiling] border pixel 1
 for_window [floating] border normal
 

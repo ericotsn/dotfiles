@@ -1,6 +1,0 @@
-# -*- mode: snippet -*-
-# name: html element with class
-# key: lc
-# --
-
-<$1 className='$2'>$0</$1>
