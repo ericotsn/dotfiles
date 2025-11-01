@@ -1,32 +1,71 @@
+# Aerospace config file
+#
+# Please see https://nikitabobko.github.io/AeroSpace/guide for a
+# complete reference!
+
 default-root-container-layout = "accordion"
 
+# You can create multiple sets of bindings by creating different
+# binding modes.  When you switch between mode, all the bindings from
+# the current mode are deactivated, and only the bindings specified in
+# the new mode become active.  The initial binding mode that AeroSpace
+# starts out with is "main".
 [mode.main.binding]
-cmd-slash = "layout h_tiles h_accordion"
 
-cmd-left = "focus --boundaries-action wrap-around-the-workspace left"
-cmd-right = "focus --boundaries-action wrap-around-the-workspace right"
+# Change focus.
+alt-left = "focus left"
+alt-down = "focus down"
+alt-up = "focus up"
+alt-right = "focus right"
 
-cmd-shift-left = "move left"
-cmd-shift-right = "move right"
+# Move focused window.
+alt-shift-left = "move left"
+alt-shift-down = "move down"
+alt-shift-up = "move up"
+alt-shift-right = "move right"
 
-cmd-1 = "workspace 1"
-cmd-2 = "workspace 2"
-cmd-3 = "workspace 3"
-cmd-4 = "workspace 4"
-cmd-5 = "workspace 5"
-cmd-6 = "workspace 6"
-cmd-7 = "workspace 7"
-cmd-8 = "workspace 8"
-cmd-9 = "workspace 9"
+# Change container layout (accordion, toggle tiled).
+alt-cmd-w = "layout h_accordion"
+alt-cmd-e = "layout tiles horizontal vertical"
 
-cmd-shift-1 = "move-node-to-workspace 1"
-cmd-shift-2 = "move-node-to-workspace 2"
-cmd-shift-3 = "move-node-to-workspace 3"
-cmd-shift-4 = "move-node-to-workspace 4"
-cmd-shift-5 = "move-node-to-workspace 5"
-cmd-shift-6 = "move-node-to-workspace 6"
-cmd-shift-7 = "move-node-to-workspace 7"
-cmd-shift-8 = "move-node-to-workspace 8"
-cmd-shift-9 = "move-node-to-workspace 9"
+# Switch to workspace.
+alt-1 = "workspace 1"
+alt-2 = "workspace 2"
+alt-3 = "workspace 3"
+alt-4 = "workspace 4"
+alt-5 = "workspace 5"
+alt-6 = "workspace 6"
+alt-7 = "workspace 7"
+alt-8 = "workspace 8"
+alt-9 = "workspace 9"
+alt-0 = "workspace 10"
 
-cmd-shift-c = "reload-config"
+# Move focused window to workspace.
+alt-cmd-shift-1 = "move-node-to-workspace 1"
+alt-cmd-shift-2 = "move-node-to-workspace 2"
+alt-cmd-shift-3 = "move-node-to-workspace 3"
+alt-cmd-shift-4 = "move-node-to-workspace 4"
+alt-cmd-shift-5 = "move-node-to-workspace 5"
+alt-cmd-shift-6 = "move-node-to-workspace 6"
+alt-cmd-shift-7 = "move-node-to-workspace 7"
+alt-cmd-shift-8 = "move-node-to-workspace 8"
+alt-cmd-shift-9 = "move-node-to-workspace 9"
+alt-cmd-shift-0 = "move-node-to-workspace 10"
+
+# Reload the configuration file.
+alt-cmd-shift-c = "reload-config"
+
+alt-cmd-r = "mode resize"
+
+# Resize window (you can also use the mouse for that).
+[mode.resize.binding]
+
+# These bindings trigger as soon as you enter the resize mode.
+left = "resize width -50"
+down = "resize height +50"
+up = "resize height -50"
+right = "resize width +50"
+
+# Back to normal: Enter or Escape
+enter = "mode main"
+esc = "mode main"

@@ -5,8 +5,15 @@
 [merge]
 	conflictstyle = diff3
 
+[fetch]
+	prune = true
+	writeCommitGraph = true
+
 [pull]
-	ff = only
+	rebase = only
+
+[rebase]
+	updateRefs = true
 
 [filter "lfs"]
 	clean = git-lfs clean -- %f

@@ -1,4 +1,4 @@
-README.md
 {{- if ne .chezmoi.os "darwin" }}
 .aerospace.toml
+.config/kanata/
 {{- end }}

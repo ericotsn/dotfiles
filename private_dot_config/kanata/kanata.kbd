@@ -1,0 +1,46 @@
+(defcfg
+  process-unmapped-keys no
+)
+
+(defsrc
+  esc  f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12
+  grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
+  tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
+  caps a    s    d    f    g    h    j    k    l    ;    '    ret
+  lsft z    x    c    v    b    n    m    ,    .    /    rsft
+  fn   lctl lalt lmet      spc            rmet ralt
+)
+
+(deflayer base
+  _    brdn bru  mctl sls  dtn  dnd  prev pp   next mute vold volu
+  _    _    _    _    _    _    _    _    _    _    _    _    _    _
+  _    _    _    _    _    _    _    _    _    _    _    _    _    _
+  @cap _    _    _    _    _    _    _    _    _    _    _    _
+  _    _    _    _    _    _    _    _    _    _    _    _
+  @fn  _    _    _         @nav           _    _
+)
+
+(deflayer fn
+  _    f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12
+  _    _    _    _    _    _    _    _    _    _    _    _    _    _
+  _    _    _    _    _    _    _    _    _    _    _    _    _    _
+  _    _    _    _    _    _    _    _    _    _    _    _    _
+  _    _    _    _    _    _    _    _    _    _    _    _
+  _    _    _    _         _              _    _
+)
+
+(deflayer nav
+  _    _    _    _    _    _    _    _    _    _    _    _    _
+  _    _    _    _    _    _    _    _    _    _    _    _    _    _
+  _    _    vold volu mute _    pgup home up   end  _    _    _    _
+  _    prev next _    pp   _    pgdn left down rght _    _    _
+  _    _    _    _    _    _    _    _    _    _    _    _
+  _    _    _    _         _              _    _
+)
+
+(defalias
+  fn (tap-hold 200 200 fn (layer-toggle fn))
+  nav (tap-hold 200 200 spc (layer-toggle nav))
+
+  cap (tap-hold-press 200 200 (caps-word-toggle 2000) lctl)
+)
