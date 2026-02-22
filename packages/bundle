@@ -1,0 +1,31 @@
+# Set arguments passed to all `brew install --cask` commands for `cask "..."`
+# Note: `require_sha` is disabled to prevent installation failures
+cask_args appdir: "/Applications", require_sha: false
+
+brew "colima"
+brew "docker"
+brew "fd"
+brew "fish"
+brew "fnm"
+brew "fzf"
+brew "git"
+brew "jq"
+brew "k9s"
+brew "kubectl"
+brew "lazydocker"
+brew "lsd"
+brew "neovim"
+brew "ripgrep"
+brew "shfmt"
+brew "stow"
+brew "stylua"
+brew "zoxide"
+
+cask "1password"
+cask "1password-cli"
+cask "cleanshot"
+cask "ghostty"
+cask "google-chrome"
+cask "nikitabobko/tap/aerospace"
+cask "obsidian"
+cask "visual-studio-code"

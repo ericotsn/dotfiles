@@ -1,0 +1,39 @@
+[commit]
+	gpgsign = true
+
+[core]
+	editor = "nvim"
+	fsmonitor = true
+
+[fetch]
+	prune = true
+	writeCommitGraph = true
+
+[gpg]
+	format = ssh
+
+[gpg "ssh"]
+	program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+
+[init]
+	defaultBranch = "main"
+
+[pull]
+	rebase = true
+
+[rebase]
+	updateRefs = true
+
+[rerere]
+	enabled = true
+
+[tag]
+	gpgSign = true
+
+[user]
+	email = "contact@ericotsn.com"
+	name = "Eric Ottosson"
+	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDMnOYyqkEucM6WGm2kRscLWw7SKFTfuaJpPkiZeOECw
+
+[includeIf "gitdir:~/Developer/work/"]
+	path = "~/Developer/work/.gitconfig"

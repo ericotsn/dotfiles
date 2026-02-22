@@ -1,0 +1,141 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+readonly SCRIPT_NAME="dot"
+DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly DOTFILES_DIR
+
+readonly PACKAGES_DIR="${DOTFILES_DIR}/packages"
+
+print_error() {
+	echo -e "\033[31m$1\033[0m" >&2
+}
+
+print_success() {
+	echo -e "\033[32m$1\033[0m"
+}
+
+print_warning() {
+	echo -e "\033[33m$1\033[0m"
+}
+
+command_exists() {
+	command -v "$1" >/dev/null 2>&1
+}
+
+install_homebrew() {
+	echo ">> Installing Homebrew"
+
+	if command_exists brew; then
+		print_success "Homebrew is already installed"
+		return 0
+	fi
+
+	echo "Homebrew is not installed. Installing now..."
+
+	local log_file
+	log_file="$(mktemp)"
+
+	if NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" >"${log_file}" 2>&1; then
+		print_success "Homebrew installed successfully"
+		eval "$(/opt/homebrew/bin/brew shellenv)"
+	else
+		local exit_code=$?
+		print_error "Homebrew installation failed (exit code: ${exit_code})"
+		cat "${log_file}" >&2
+		rm "${log_file}"
+		return 1
+	fi
+
+	rm "${log_file}"
+}
+
+install_packages() {
+	echo ">> Installing packages from Brewfile"
+
+	if [[ ! -f "${PACKAGES_DIR}/bundle" ]]; then
+		print_error "Brewfile not found at ${PACKAGES_DIR}/bundle"
+		return 1
+	fi
+
+	if brew bundle --file="${PACKAGES_DIR}/bundle"; then
+		print_success "Packages installed successfully"
+	else
+		print_warning "Some packages failed to install"
+	fi
+}
+
+stow_dotfiles() {
+	echo ">> Stowing dotfiles"
+
+	if ! command_exists stow; then
+		print_error "GNU Stow is not installed"
+		return 1
+	fi
+
+	if stow --dotfiles -R -v -d "${DOTFILES_DIR}" -t "${HOME}" home; then
+		print_success "Dotfiles stowed successfully"
+	else
+		print_error "Failed to stow dotfiles"
+		return 1
+	fi
+}
+
+setup_fish_shell() {
+	echo ">> Setting up Fish shell"
+
+	if ! command_exists fish; then
+		print_error "Fish shell is not installed"
+		return 1
+	fi
+
+	local fish_path
+	fish_path="$(command -v fish)"
+
+	# Add fish to /etc/shells if needed
+	if ! grep -q "${fish_path}" /etc/shells; then
+		echo "Appending ${fish_path} to /etc/shells..."
+		echo "${fish_path}" | sudo tee -a /etc/shells >/dev/null
+	fi
+
+	if [[ "${SHELL}" != "${fish_path}" ]]; then
+		if chsh -s "${fish_path}"; then
+			print_success "Default shell changed to Fish"
+		else
+			print_error "Failed to change default shell"
+			return 1
+		fi
+	else
+		print_success "Fish is already the default shell"
+	fi
+}
+
+main() {
+	if [[ $# -lt 1 ]]; then
+		echo "Usage: ${SCRIPT_NAME} <cmd>"
+		exit 1
+	fi
+
+	local cmd="${1:-}"
+	shift || true
+
+	case "${cmd}" in
+	init)
+		echo "Initializing dotfiles"
+
+		install_homebrew || return 1
+		install_packages || return 1
+		stow_dotfiles || return 1
+		setup_fish_shell || return 1
+
+		echo "Initialization complete! 🎉"
+		;;
+	*)
+		print_error "Unknown command: ${cmd}"
+		exit 1
+		;;
+	esac
+}
+
+main "$@"
