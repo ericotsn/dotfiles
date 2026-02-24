@@ -7,6 +7,7 @@ DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly DOTFILES_DIR
 
 readonly PACKAGES_DIR="${DOTFILES_DIR}/packages"
+readonly FONT_REPO_URL="git@github.com:ericotsn/pragmatapro.git"
 
 print_error() {
 	echo -e "\033[31m$1\033[0m" >&2
@@ -36,6 +37,7 @@ install_homebrew() {
 
 	local log_file
 	log_file="$(mktemp)"
+	trap 'rm "${log_file}"' EXIT
 
 	if NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" >"${log_file}" 2>&1; then
 		print_success "Homebrew installed successfully"
@@ -47,8 +49,6 @@ install_homebrew() {
 		rm "${log_file}"
 		return 1
 	fi
-
-	rm "${log_file}"
 }
 
 install_packages() {
@@ -78,6 +78,39 @@ stow_dotfiles() {
 		print_success "Dotfiles stowed successfully"
 	else
 		print_error "Failed to stow dotfiles"
+		return 1
+	fi
+}
+
+install_font() {
+	echo ">> Installing PragmataPro font"
+
+	local font_temp_dir
+	font_temp_dir=$(mktemp -d)
+	trap 'rm -rf "${font_temp_dir}"' EXIT
+
+	local font_install_dir="${HOME}/Library/Fonts"
+
+	echo "Cloning font repository..."
+	if git clone "${FONT_REPO_URL}" "${font_temp_dir}"; then
+		print_success "Repository cloned successfully"
+
+		mkdir -p "${font_install_dir}"
+		echo "Installing font files..."
+
+		local font_count=0
+		while IFS= read -r -d '' font_file; do
+			cp "${font_file}" "${font_install_dir}/"
+			((++font_count))
+		done < <(find "${font_temp_dir}" -type f \( -name '*.otf' -o -name '*.ttf' \) -print0)
+
+		if [[ ${font_count} -gt 0 ]]; then
+			print_success "Installed ${font_count} font files"
+		else
+			print_warning "No font files found in repository"
+		fi
+	else
+		print_error "Failed to clone font repository"
 		return 1
 	fi
 }
@@ -127,6 +160,11 @@ main() {
 		install_homebrew || return 1
 		install_packages || return 1
 		stow_dotfiles || return 1
+
+		if [[ "${SKIP_FONT:-}" != "true" ]]; then
+			install_font || print_warning "Font installation failed (continuing)"
+		fi
+
 		setup_fish_shell || return 1
 
 		echo "Initialization complete! 🎉"
