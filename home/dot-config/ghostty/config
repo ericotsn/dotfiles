@@ -1,0 +1,14 @@
+theme = Catppuccin Macchiato
+
+font-family = PragmataPro
+font-style = Regular
+font-style-bold = Bold
+font-style-bold-italic = Bold Italic
+font-style-italic = Regular Italic
+
+font-size = 18
+
+adjust-cell-height = 10
+
+macos-option-as-alt = true
+macos-titlebar-proxy-icon = hidden
