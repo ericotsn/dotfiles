@@ -1,0 +1,9 @@
+{
+  "lazy.nvim": { "branch": "main", "commit": "306a05526ada86a7b30af95c5cc81ffba93fef97" },
+  "mini.ai": { "branch": "main", "commit": "4b0a6207341d895b6cfe9bcb1e4d3e8607bfe4f4" },
+  "mini.comment": { "branch": "main", "commit": "597d32ed2c9fbfbf9a250bec7c6b9035f71214f5" },
+  "mini.jump": { "branch": "main", "commit": "c1678446e887bb987b4a4351204b183b00984f8b" },
+  "mini.move": { "branch": "main", "commit": "b8ba0b77e91b5f0fe8e014e03f7f59799dec1d96" },
+  "mini.pairs": { "branch": "main", "commit": "b7fde3719340946feb75017ef9d75edebdeb0566" },
+  "mini.surround": { "branch": "main", "commit": "d205d1741d1fcc1f3117b4e839bf00f74ad72fa2" }
+}
