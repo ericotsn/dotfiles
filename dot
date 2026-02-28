@@ -146,33 +146,49 @@ setup_fish_shell() {
 	fi
 }
 
+cmd_init() {
+	echo "Initializing dotfiles"
+
+	install_homebrew || return 1
+	install_packages || return 1
+	stow_dotfiles || return 1
+
+	if [[ "${SKIP_FONT:-true}" != "true" ]]; then
+		install_font || print_warning "Font installation failed (continuing)"
+	fi
+
+	setup_fish_shell || return 1
+
+	echo "Initialization complete! 🎉"
+}
+
 main() {
 	if [[ $# -lt 1 ]]; then
-		echo "Usage: ${SCRIPT_NAME} <cmd>"
+		echo "Usage: ${SCRIPT_NAME} [--install-font] <command>"
 		exit 1
 	fi
 
-	local cmd="${1:-}"
+	while [[ $# -gt 0 ]]; do
+		case "$1" in
+		--install-font)
+			export SKIP_FONT=false
+			shift
+			;;
+		*)
+			break
+			;;
+		esac
+	done
+
+	local command="${1:-}"
 	shift || true
 
-	case "${cmd}" in
+	case "${command}" in
 	init)
-		echo "Initializing dotfiles"
-
-		install_homebrew || return 1
-		install_packages || return 1
-		stow_dotfiles || return 1
-
-		if [[ "${SKIP_FONT:-}" != "true" ]]; then
-			install_font || print_warning "Font installation failed (continuing)"
-		fi
-
-		setup_fish_shell || return 1
-
-		echo "Initialization complete! 🎉"
+		cmd_init "$@"
 		;;
 	*)
-		print_error "Unknown command: ${cmd}"
+		print_error "Unknown command: ${command}"
 		exit 1
 		;;
 	esac
