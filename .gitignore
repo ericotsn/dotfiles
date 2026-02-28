@@ -1,2 +1,4 @@
 .DS_Store
-fish_variables
+home/dot-config/fish/fish_variables
+home/dot-config/op/
+lazy-lock.json
