@@ -1,7 +1,7 @@
 theme = Catppuccin Macchiato
 
 font-family = PragmataPro
-font-size = 18
+font-size = 16.0
 font-style = Regular
 font-style-bold = Bold
 font-style-bold-italic = Bold Italic
