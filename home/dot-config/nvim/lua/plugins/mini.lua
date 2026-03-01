@@ -43,7 +43,6 @@ return {
         },
       })
     end,
-    cond = vim.g.vscode or true,
   },
   {
     "nvim-mini/mini.pairs",
