@@ -1,4 +1,24 @@
 [
+    {
+        "key": "shift+cmd+a",
+        "command": "github.copilot.chat.attachSelection",
+        "when": "editorTextFocus && editorHasSelection"
+    },
+    {
+        "key": "shift+cmd+a",
+        "command": "github.copilot.chat.attachFile",
+        "when": "editorTextFocus && !editorHasSelection"
+    },
+    {
+        "key": "cmd+k cmd+m",
+        "command": "workbench.action.toggleMaximizedPanel",
+        "when": "panelFocus"
+    },
+    {
+        "key": "cmd+k cmd+m",
+        "command": "workbench.action.toggleMaximizedAuxiliaryBar",
+        "when": "auxiliaryBarFocus"
+    },
     // Redefine keybindings to override vscode-neovim and restore
     // default Tab, Shift+Tab, and Escape behavior for inline
     // suggestions.
