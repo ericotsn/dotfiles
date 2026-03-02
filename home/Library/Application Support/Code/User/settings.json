@@ -1,21 +1,20 @@
 {
-    "editor.fontFamily": "PragmataPro, Menlo, Monaco, 'Courier New', monospace",
+    "editor.fontFamily": "PragmataPro Mono Liga, Menlo, Monaco, 'Courier New', monospace",
     "editor.fontLigatures": true,
     "editor.fontSize": 16.0,
     "editor.lineNumbers": "relative",
     "editor.rulers": [
         80
     ],
-    "editor.semanticHighlighting.enabled": true,
     "extensions.experimental.affinity": {
         "asvetliakov.vscode-neovim": 1
     },
     "files.insertFinalNewline": true,
     "terminal.integrated.fontLigatures.enabled": true,
     "terminal.integrated.fontSize": 16.0,
+    "terminal.integrated.lineHeight": 1.3,
     "terminal.integrated.minimumContrastRatio": 1,
     "workbench.activityBar.location": "top",
-    "workbench.colorTheme": "Catppuccin Macchiato",
-    "workbench.editor.showTabs": "none",
-    "terminal.integrated.lineHeight": 1.3
+    "workbench.colorTheme": "Catppuccin Latte",
+    "workbench.editor.showTabs": "none"
 }
