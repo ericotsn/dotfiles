@@ -1,4 +1,4 @@
-theme = Catppuccin Latte
+theme = Catppuccin Macchiato
 
 font-family = PragmataPro
 font-size = 16.0
@@ -11,3 +11,4 @@ adjust-cell-height = 10
 
 macos-option-as-alt = true
 macos-titlebar-proxy-icon = hidden
+macos-titlebar-style = tabs

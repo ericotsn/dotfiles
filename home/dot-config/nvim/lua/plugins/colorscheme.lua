@@ -3,7 +3,7 @@ return {
   name = "catppuccin",
   priority = 1000,
   config = function()
-    vim.cmd.colorscheme("catppuccin-latte")
+    vim.cmd.colorscheme("catppuccin-macchiato")
   end,
   cond = vim.g.vscode or true,
 }

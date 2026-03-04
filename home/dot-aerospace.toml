@@ -2,6 +2,10 @@ config-version = 2
 
 persistent-workspaces = []
 
+[[on-window-detected]]
+if.app-id = "com.mitchellh.ghostty"
+run = [ "layout floating" ]
+
 [mode.main.binding]
 alt-slash = "layout tiles horizontal vertical"
 alt-comma = "layout accordion horizontal vertical"
