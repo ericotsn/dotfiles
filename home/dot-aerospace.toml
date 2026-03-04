@@ -23,6 +23,10 @@ alt-shift-i = "move up"
 alt-minus = "resize smart -50"
 alt-equal = "resize smart +50"
 
+alt-f = "fullscreen"
+
+alt-tab = "workspace-back-and-forth"
+
 alt-shift-space = "layout floating tiling"
 
 alt-1 = "workspace 1"
