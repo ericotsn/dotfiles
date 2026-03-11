@@ -14,9 +14,7 @@
     "terminal.integrated.fontSize": 16.0,
     "terminal.integrated.lineHeight": 1.3,
     "terminal.integrated.minimumContrastRatio": 1,
-    "window.density.editorTabHeight": "compact",
     "workbench.activityBar.location": "top",
     "workbench.colorTheme": "Catppuccin Macchiato",
-    "workbench.editor.showTabs": "multiple",
-    "workbench.editor.tabActionCloseVisibility": false,
+    "workbench.editor.showTabs": "none",
 }
