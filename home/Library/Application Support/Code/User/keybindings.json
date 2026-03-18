@@ -4,9 +4,8 @@
         "command": "workbench.action.tasks.runTask",
         "args": "lazygit"
     },
-    // The default Search view is awful, but the Search Editor is
-    // pretty nice. Strangely, it doesn’t come with default
-    // keybindings.
+    // The default Search view is awful, but the Search Editor is pretty nice.
+    // Strangely, it doesn’t come with default keybindings.
     {
         "key": "cmd+k s",
         "command": "search.action.openEditor"
@@ -25,9 +24,8 @@
         "command": "editor.action.revealDefinition",
         "when": "inSearchEditor"
     },
-    // For a Copilot-focused editor, it's odd there are no default
-    // keybindings to attach the current selection or file to the
-    // chat.
+    // For a Copilot-focused editor, it's odd there are no default keybindings
+    // to attach the current selection or file to the chat.
     {
         "key": "shift+cmd+a",
         "command": "github.copilot.chat.attachSelection",
@@ -38,9 +36,8 @@
         "command": "github.copilot.chat.attachFile",
         "when": "editorTextFocus && !editorHasSelection"
     },
-    // The "cmd+x cmd+m" chord is used to maximize the Editor Group
-    // view by default, so let's extend it to the panel and auxiliary
-    // bar as well.
+    // The "cmd+x cmd+m" chord is used to maximize the Editor Group view by
+    // default, so let's extend it to the panel and auxiliary bar as well.
     {
         "key": "cmd+k cmd+m",
         "command": "workbench.action.toggleMaximizedPanel",
@@ -51,9 +48,8 @@
         "command": "workbench.action.toggleMaximizedAuxiliaryBar",
         "when": "auxiliaryBarFocus"
     },
-    // Redefine keybindings to override vscode-neovim and restore
-    // default Tab, Shift+Tab, and Escape behavior for inline
-    // suggestions.
+    // Redefine keybindings to override vscode-neovim and restore default Tab,
+    // Shift+Tab, and Escape behavior for inline suggestions.
     {
         "key": "tab",
         "command": "editor.action.inlineSuggest.commit",

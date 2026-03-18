@@ -6,19 +6,23 @@ persistent-workspaces = []
 if.app-id = "com.mitchellh.ghostty"
 run = [ "layout floating" ]
 
+[[on-window-detected]]
+if.app-id = "com.apple.finder"
+run = [ "layout floating" ]
+
 [mode.main.binding]
 alt-slash = "layout tiles horizontal vertical"
 alt-comma = "layout accordion horizontal vertical"
 
-alt-j = "focus left"
-alt-l = "focus right"
-alt-k = "focus down"
-alt-i = "focus up"
+alt-left = "focus left"
+alt-right = "focus right"
+alt-down = "focus down"
+alt-up = "focus up"
 
-alt-shift-j = "move left"
-alt-shift-l = "move right"
-alt-shift-k = "move down"
-alt-shift-i = "move up"
+alt-shift-left = "move left"
+alt-shift-right = "move right"
+alt-shift-down = "move down"
+alt-shift-up = "move up"
 
 alt-minus = "resize smart -50"
 alt-equal = "resize smart +50"

@@ -1,13 +1,13 @@
+config-file = ?font-codepoint-map
+
 theme = Catppuccin Latte
 
-font-family = PragmataPro
+font-family = PragmataPro Mono Liga
+font-feature = ss13,ss15
 font-size = 16.0
-font-style = Regular
-font-style-bold = Bold
-font-style-bold-italic = Bold Italic
-font-style-italic = Regular Italic
+font-thicken = true
 
-adjust-cell-height = 10
+adjust-cell-height = 13
 
 macos-option-as-alt = true
 macos-titlebar-proxy-icon = hidden
