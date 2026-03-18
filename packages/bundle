@@ -3,6 +3,7 @@
 cask_args appdir: "/Applications", require_sha: false
 
 brew "awscli"
+brew "biome"
 brew "direnv"
 brew "doggo"
 brew "fd"
@@ -24,8 +25,11 @@ brew "shfmt"
 brew "stow"
 brew "stylua"
 brew "tmux"
+brew "tree-sitter-cli"
 brew "uv"
 brew "zoxide"
+
+brew "font-symbols-only-nerd-font"
 
 # Containerization (Kubernetes, Docker, etc.)
 brew "colima"
