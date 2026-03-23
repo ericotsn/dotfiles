@@ -1,6 +1,6 @@
 config-file = ?font-codepoint-map
 
-theme = Catppuccin Latte
+theme = Catppuccin Frappe
 
 font-family = PragmataPro Mono Liga
 font-feature = ss13,ss15
