@@ -61,6 +61,30 @@ function _G.StatusColumn()
 	return sign .. "%l " .. git .. "%C "
 end
 
+-- [[ Functions ]] ============================================================
+
+local function open_lazygit()
+	vim.cmd("tabedit")
+	vim.cmd("setlocal nonumber signcolumn=no statuscolumn=")
+
+	vim.fn.jobstart({
+		"lazygit",
+		"--git-dir=" .. vim.fn.trim(vim.fn.system("git rev-parse --git-dir")),
+		"--work-tree=" .. vim.fn.getcwd(),
+	}, {
+		term = true,
+		on_exit = function()
+			vim.schedule(function()
+				if vim.api.nvim_tabpage_is_valid(0) then
+					vim.cmd("tabclose")
+				end
+			end)
+		end,
+	})
+
+	vim.cmd("startinsert")
+end
+
 -- [[ Autocommands ]] =========================================================
 
 vim.api.nvim_create_autocmd("TextYankPost", {
@@ -124,7 +148,9 @@ vim.keymap.set("n", "<leader>hi", ":Gitsigns preview_hunk_inline<CR>", { desc = 
 vim.keymap.set("n", "<leader>lh", ":Gitsigns setqflist<CR>", { desc = "Add all hunks to the quickfix list" })
 vim.keymap.set("n", "\\b", ":Gitsigns toggle_current_line_blame<CR>", { desc = "Toggle line blame" })
 
-local lsp_keymap = function(ev)
+vim.keymap.set("n", "<leader>gg", open_lazygit, { silent = true })
+
+local function lsp_keymap(ev)
 	vim.keymap.set( "n", "gd", vim.lsp.buf.definition, { desc = "Jump to the definition of the symbol under the cursor", buffer = ev.buf })
 	vim.keymap.set( "n", "gD", vim.lsp.buf.declaration, { desc = "Jump to the declaration of the symbol under the cursor", buffer = ev.buf })
 	vim.keymap.set("n", "gri", function()
