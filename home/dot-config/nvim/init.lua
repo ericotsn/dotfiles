@@ -1,6 +1,6 @@
 -- Author: Eric Ottosson <contact@ericotsn.com>
 -- URL: https://github.com/ericotsn/dotfiles
--- Version: 1.0.0
+-- Version: 1.1.0
 
 if vim.g.vscode then
 	return
@@ -18,7 +18,6 @@ vim.o.number = true
 vim.o.relativenumber = true
 vim.o.scrolloff = 8
 vim.o.shiftwidth = 4
-vim.o.showmode = false
 vim.o.smartcase = true
 vim.o.tabstop = 4
 vim.o.timeoutlen = 300
@@ -59,6 +58,31 @@ function _G.StatusColumn()
 	end
 
 	return sign .. "%l " .. git .. "%C "
+end
+
+-- Custom 'statusline' for Neovim
+vim.g.statusline_orig = vim.o.statusline
+vim.o.statusline = "%{%v:lua.StatusLine()%}"
+
+function _G.StatusLine()
+	local is_active = vim.api.nvim_get_current_win() == tonumber(vim.g.actual_curwin or -1)
+
+	local get_file_icon = function()
+		local icon, icon_hl, is_default = MiniIcons.get("file", vim.fn.expand("%:t"))
+		local hl = is_active and "%%#" .. icon_hl .. "#" or ""
+		return is_default and "" or hl .. icon .. "  %%##"
+	end
+
+	local get_git_branch = function()
+		local head = vim.b.gitsigns_head
+		local status = is_active and vim.b.gitsigns_status or ""
+		return head and "󰘬 " .. head .. (status and " " .. status or "") or ""
+	end
+
+	local statusline = vim.g.statusline_orig
+	statusline = statusline:gsub("%%f", " " .. get_file_icon() .. "%%f", 1)
+	statusline = statusline:gsub("%%=", get_git_branch() .. "%%=", 1)
+	return statusline
 end
 
 -- [[ Functions ]] ============================================================
@@ -220,7 +244,7 @@ local parsers = {
 	"yaml",
 }
 
-require("nvim-treesitter").install(parsers, { summary = true })
+require("nvim-treesitter").install(parsers)
 
 vim.api.nvim_create_autocmd("FileType", {
 	callback = function(ev)
@@ -304,22 +328,24 @@ require("mini.cursorword").setup()
 require("mini.extra").setup()
 require("mini.icons").setup()
 require("mini.move").setup()
+require("mini.pick").setup()
 
-require("mini.pick").setup({
-	source = {
-		show = function(buf_id, items, query)
-			MiniPick.default_show(buf_id, items, query, { show_icons = true })
-			local lines = vim.api.nvim_buf_get_lines(buf_id, 0, -1, false)
-			for i = 0, #lines - 1 do
-				local icon_end = vim.fn.byteidx(lines[i + 1], 1)
-				if icon_end > 0 then
-					vim.api.nvim_buf_set_text(buf_id, i, icon_end, i, icon_end, { " " })
-					vim.api.nvim_buf_set_text(buf_id, i, 0, i, 0, { " " })
-				end
-			end
-		end,
-	},
-})
+if _G.MiniPick ~= nil then
+	local default_show = _G.MiniPick.default_show
+	-- We override `default_show` instead of using `source.show` to preserve
+	-- the hide/show behavior of icons using the built-in pickers.
+	_G.MiniPick.default_show = function(buf_id, items, query, opts)
+		default_show(buf_id, items, query, opts)
+		if not (opts and opts.show_icons) then
+			return
+		end
+
+		for row, line in ipairs(vim.api.nvim_buf_get_lines(buf_id, 0, -1, false)) do
+			local col = vim.fn.byteidx(line, 1)
+			vim.api.nvim_buf_set_text(buf_id, row - 1, col, row - 1, col, { " " })
+		end
+	end
+end
 
 require("mini.surround").setup({
 	mappings = {
