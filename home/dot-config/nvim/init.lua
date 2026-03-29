@@ -22,7 +22,6 @@ vim.o.tabstop = 4
 vim.o.timeoutlen = 300
 vim.o.undofile = true
 vim.o.updatetime = 250
-vim.o.winborder = "rounded"
 vim.o.wrap = false
 
 vim.diagnostic.config({
