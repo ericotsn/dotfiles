@@ -1,6 +1,5 @@
 -- Author: Eric Ottosson <contact@ericotsn.com>
 -- URL: https://github.com/ericotsn/dotfiles
--- Version: 1.2.1
 
 if vim.g.vscode then
 	return
