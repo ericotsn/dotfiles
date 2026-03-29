@@ -1,6 +1,6 @@
 -- Author: Eric Ottosson <contact@ericotsn.com>
 -- URL: https://github.com/ericotsn/dotfiles
--- Version: 1.2.0
+-- Version: 1.2.1
 
 if vim.g.vscode then
 	return
@@ -158,6 +158,9 @@ vim.keymap.set("n", "<C-j>", ":cnext<CR>zz", { desc = "Display the next item in 
 vim.keymap.set("n", "<C-k>", ":cprev<CR>zz", { desc = "Display the previous item in the quickfix list" })
 vim.keymap.set("n", "<leader>co", ":copen<CR>zz", { desc = "Open the quickfix list" })
 vim.keymap.set("n", "<leader>cc", ":cclose<CR>zz", { desc = "Close the quickfix list" })
+
+vim.keymap.set("n", "]d", function() vim.diagnostic.jump({ count = 1, float = true }) end, { desc = "Jump to the next diagnostic" })
+vim.keymap.set("n", "[d", function() vim.diagnostic.jump({ count = -1, float = true }) end, { desc = "Jump to the previous diagnostic" })
 
 vim.keymap.set({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 vim.keymap.set({ "n", "x" }, "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
