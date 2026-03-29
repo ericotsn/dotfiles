@@ -1,6 +1,6 @@
 -- Author: Eric Ottosson <contact@ericotsn.com>
 -- URL: https://github.com/ericotsn/dotfiles
--- Version: 1.1.0
+-- Version: 1.1.1
 
 if vim.g.vscode then
 	return
@@ -349,13 +349,12 @@ end
 
 require("mini.surround").setup({
 	mappings = {
-		add = "ys",
-		delete = "ds",
-		replace = "cs",
-		-- Disable bindings to avoid conflicts with `leap`
-		find = "",
-		find_left = "",
-		highlight = "",
+		add = "gsa", -- Add surrounding in Normal and Visual modes
+		delete = "gsd", -- Delete surrounding
+		find = "gsf", -- Find surrounding (to the right)
+		find_left = "gsF", -- Find surrounding (to the left)
+		highlight = "gsh", -- Highlight surrounding
+		replace = "gsr", -- Replace surrounding
 	},
 })
 
