@@ -1,6 +1,6 @@
 -- Author: Eric Ottosson <contact@ericotsn.com>
 -- URL: https://github.com/ericotsn/dotfiles
--- Version: 1.1.1
+-- Version: 1.2.0
 
 if vim.g.vscode then
 	return
@@ -27,7 +27,14 @@ vim.o.winborder = "rounded"
 vim.o.wrap = false
 
 vim.diagnostic.config({
-	signs = false,
+	signs = {
+		text = {
+			[vim.diagnostic.severity.ERROR] = "‼",
+			[vim.diagnostic.severity.WARN] = "!",
+			[vim.diagnostic.severity.INFO] = "⁇",
+			[vim.diagnostic.severity.HINT] = "?",
+		},
+	},
 	-- Show partial inline diagnostics on the current cursor line
 	virtual_text = {
 		current_line = true,
@@ -332,8 +339,8 @@ require("mini.pick").setup()
 
 if _G.MiniPick ~= nil then
 	local default_show = _G.MiniPick.default_show
-	-- We override `default_show` instead of using `source.show` to preserve
-	-- the hide/show behavior of icons using the built-in pickers.
+	-- Override `default_show` instead of using `source.show` to preserve the
+	-- hide/show behavior of icons using the built-in pickers.
 	_G.MiniPick.default_show = function(buf_id, items, query, opts)
 		default_show(buf_id, items, query, opts)
 		if not (opts and opts.show_icons) then
@@ -404,7 +411,14 @@ vim.pack.add({
 	{ src = "https://github.com/stevearc/oil.nvim.git" },
 })
 
-require("oil").setup()
+require("oil").setup({
+	columns = {
+		"permissions",
+		"size",
+		"mtime",
+		"icon",
+	},
+})
 
 -- conform --------------------------------------------------------------------
 vim.pack.add({
