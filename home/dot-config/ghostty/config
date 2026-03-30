@@ -12,3 +12,4 @@ adjust-cell-height = 13
 macos-option-as-alt = true
 macos-titlebar-proxy-icon = hidden
 macos-titlebar-style = tabs
+mouse-hide-while-typing = true
