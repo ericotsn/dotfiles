@@ -1,6 +1,2 @@
 .DS_Store
-home/dot-config/fish/fish_variables
-home/dot-config/github-copilot/
-home/dot-config/op/
-lazy-lock.json
 nvim-pack-lock.json

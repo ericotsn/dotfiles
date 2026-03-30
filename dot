@@ -66,18 +66,18 @@ install_packages() {
 	fi
 }
 
-stow_dotfiles() {
-	echo ">> Stowing dotfiles"
+apply_dotfiles() {
+	echo ">> Applying dotfiles"
 
-	if ! command_exists stow; then
-		print_error "GNU Stow is not installed"
+	if ! command_exists chezmoi; then
+		print_error "chezmoi is not installed"
 		return 1
 	fi
 
-	if stow --dotfiles -R -v -d "${DOTFILES_DIR}" -t "${HOME}" home; then
-		print_success "Dotfiles stowed successfully"
+	if chezmoi apply --source "${DOTFILES_DIR}"; then
+		print_success "Dotfiles applied successfully"
 	else
-		print_error "Failed to stow dotfiles"
+		print_error "Failed to apply dotfiles"
 		return 1
 	fi
 }
@@ -151,7 +151,7 @@ cmd_init() {
 
 	install_homebrew || return 1
 	install_packages || return 1
-	stow_dotfiles || return 1
+	apply_dotfiles || return 1
 
 	if [[ "${SKIP_FONT:-true}" != "true" ]]; then
 		install_font || print_warning "Font installation failed (continuing)"
