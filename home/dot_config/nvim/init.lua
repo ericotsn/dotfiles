@@ -179,6 +179,8 @@ vim.keymap.set("n", "<leader>sh", function() MiniPick.builtin.help() end, { desc
 vim.keymap.set("n", "<leader>hi", ":Gitsigns preview_hunk_inline<CR>", { desc = "Preview inline hunk" })
 vim.keymap.set("n", "<leader>lh", ":Gitsigns setqflist<CR>", { desc = "Add all hunks to the quickfix list" })
 vim.keymap.set("n", "\\b", ":Gitsigns toggle_current_line_blame<CR>", { desc = "Toggle line blame" })
+vim.keymap.set("n", "]h", ":Gitsigns nav_hunk next<CR>", { desc = "Jump to the next hunk" })
+vim.keymap.set("n", "[h", ":Gitsigns nav_hunk prev<CR>", { desc = "Jump to the previous hunk" })
 
 vim.keymap.set("n", "<leader>gg", open_lazygit, { silent = true })
 
@@ -436,6 +438,7 @@ require("conform").setup({
 		typescript = { "oxfmt", "biome", "prettierd", stop_after_first = true },
 		typescriptreact = { "oxfmt", "biome", "prettierd", stop_after_first = true },
 		lua = { "stylua" },
+		json = { "jq" },
 	},
 	formatters = {
 		oxfmt = {
