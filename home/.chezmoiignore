@@ -2,3 +2,5 @@
 .aerospace.toml
 Library/Application Support/Code
 {{ end }}
+
+.config/nvim/nvim-pack-lock.json

@@ -488,7 +488,7 @@ require("conform").setup({
 
 -- blink.cmp ------------------------------------------------------------------
 vim.pack.add({
-	{ src = "https://github.com/saghen/blink.cmp.git", version = "v1.10.1" },
+	{ src = "https://github.com/saghen/blink.cmp.git", version = "v1.10.2" },
 })
 
 require("blink.cmp").setup({
