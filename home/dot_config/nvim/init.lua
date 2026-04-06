@@ -134,6 +134,21 @@ vim.api.nvim_create_autocmd("CursorMoved", {
 	end,
 })
 
+vim.api.nvim_create_autocmd("LspProgress", {
+	desc = "Display LSP progress lifecycle messages",
+	callback = function(ev)
+		local value = ev.data.params.value
+		vim.api.nvim_echo({ { value.message or "done" } }, false, {
+			id = "lsp." .. ev.data.client_id,
+			kind = "progress",
+			source = "vim.lsp",
+			title = value.title,
+			status = value.kind ~= "end" and "running" or "success",
+			percent = value.percentage,
+		})
+	end,
+})
+
 -- [[ Keymaps ]] ==============================================================
 -- stylua: ignore start
 
