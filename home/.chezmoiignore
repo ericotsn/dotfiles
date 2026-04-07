@@ -1,6 +1,6 @@
 {{ if ne .chezmoi.os "darwin" }}
+Library/
 .aerospace.toml
-Library/Application Support/Code
 {{ end }}
 
 .config/nvim/nvim-pack-lock.json
