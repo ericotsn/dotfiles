@@ -463,8 +463,9 @@ require("conform").setup({
 		javascript = { "oxfmt", "biome", "prettierd", stop_after_first = true },
 		typescript = { "oxfmt", "biome", "prettierd", stop_after_first = true },
 		typescriptreact = { "oxfmt", "biome", "prettierd", stop_after_first = true },
+		json = { "oxfmt", "jq", stop_after_first = true },
+		jsonc = { "oxfmt", "jq", stop_after_first = true },
 		lua = { "stylua" },
-		json = { "jq" },
 	},
 	formatters = {
 		oxfmt = {
