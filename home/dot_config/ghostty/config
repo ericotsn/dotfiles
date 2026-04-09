@@ -8,6 +8,7 @@ font-size = 16.0
 font-thicken = true
 
 adjust-cell-height = 13
+window-padding-balance = true
 
 macos-option-as-alt = true
 macos-titlebar-proxy-icon = hidden
