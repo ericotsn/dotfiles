@@ -178,10 +178,27 @@ vim.keymap.set("x", "<leader>p", [["_dP]], { desc = "Paste without overwriting r
 vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Scroll up and center cursor" })
 vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Scroll down and center cursor" })
 
-vim.keymap.set("n", "<C-j>", ":cnext<CR>zz", { desc = "Display the next item in the quickfix list" })
-vim.keymap.set("n", "<C-k>", ":cprev<CR>zz", { desc = "Display the previous item in the quickfix list" })
-vim.keymap.set("n", "<leader>co", ":copen<CR>zz", { desc = "Open the quickfix list" })
-vim.keymap.set("n", "<leader>cc", ":cclose<CR>zz", { desc = "Close the quickfix list" })
+vim.keymap.set("n", "<leader>w", ":update<CR>", { desc = "Write the current buffer" })
+vim.keymap.set("n", "<leader>q", ":quit<CR>", { desc = "Quit the current file" })
+vim.keymap.set("n", "<leader>Q", ":wqa<CR>", { desc = "Write all buffers and quit" })
+
+vim.keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
+vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
+vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
+vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
+
+-- vim.keymap.set("n", "<C-j>", ":cnext<CR>zz", { desc = "Display the next item in the quickfix list" })
+-- vim.keymap.set("n", "<C-k>", ":cprev<CR>zz", { desc = "Display the previous item in the quickfix list" })
+vim.keymap.set("n", "<leader>co", ":copen<CR>zz", { desc = "Open the quickfix list", silent = true })
+vim.keymap.set("n", "<leader>cc", ":cclose<CR>zz", { desc = "Close the quickfix list", silent = true })
+
+for i = 1, 9 do
+	vim.keymap.set({ "n", "t" }, "<leader>" .. i, ":tabnext" .. i .. "<CR>")
+end
+
+vim.keymap.set("n", "<leader>a", ":edit #<CR>", { desc = "Open the alternate file" })
+
+vim.keymap.set("n", "<C-f>", ":Open .<CR>", { desc = "Open the current working directory with the system default handler" })
 
 vim.keymap.set("n", "]d", function() vim.diagnostic.jump({ count = 1, float = true }) end, { desc = "Jump to the next diagnostic" })
 vim.keymap.set("n", "[d", function() vim.diagnostic.jump({ count = -1, float = true }) end, { desc = "Jump to the previous diagnostic" })
@@ -191,16 +208,18 @@ vim.keymap.set({ "n", "x" }, "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, si
 
 vim.keymap.set("n", "<leader>ld", vim.diagnostic.setqflist, { desc = "Add all diagnostics to the quickfix list" })
 
-vim.keymap.set("n", "-", ":Oil<CR>", { desc = "Open parent directory" })
+vim.keymap.set("n", "-", ":Oil<CR>", { desc = "Open parent directory with Oil" })
+vim.keymap.set("n", "_", ":Oil .<CR>", { desc = "Open the current working directory with Oil" })
 
 vim.keymap.set({ "n", "x", "o" }, "s", "<Plug>(leap)")
 vim.keymap.set("n", "S", "<Plug>(leap-from-window)")
 
-vim.keymap.set("n", "<leader>?", function() MiniExtra.pickers.oldfiles() end, { desc = "Search recent files" })
-vim.keymap.set("n", "<leader>fb", function() MiniPick.builtin.buffers() end, { desc = "Search buffers" })
-vim.keymap.set("n", "<leader>ff", function() MiniPick.builtin.files() end, { desc = "Search files" })
-vim.keymap.set("n", "<leader>sg", function() MiniPick.builtin.grep_live() end, { desc = "Search pattern matches with live feedback" })
 vim.keymap.set("n", "<leader>sh", function() MiniPick.builtin.help() end, { desc = "Search help tags" })
+vim.keymap.set("n", "<leader>sk", function() MiniExtra.pickers.keymaps() end, { desc = "Search keymaps" })
+vim.keymap.set("n", "<leader>sf", function() MiniPick.builtin.files() end, { desc = "Search files" })
+vim.keymap.set("n", "<leader>sg", function() MiniPick.builtin.grep_live() end, { desc = "Search pattern matches with live feedback" })
+vim.keymap.set("n", "<leader>s.", function() MiniExtra.pickers.oldfiles() end, { desc = "Search recent files" })
+vim.keymap.set("n", "<leader><leader>", function() MiniPick.builtin.buffers() end, { desc = "Search buffers" })
 
 vim.keymap.set("n", "<leader>hi", ":Gitsigns preview_hunk_inline<CR>", { desc = "Preview inline hunk" })
 vim.keymap.set("n", "<leader>lh", ":Gitsigns setqflist<CR>", { desc = "Add all hunks to the quickfix list" })
@@ -211,18 +230,16 @@ vim.keymap.set("n", "[h", ":Gitsigns nav_hunk prev<CR>", { desc = "Jump to the p
 vim.keymap.set("n", "<leader>gg", open_lazygit, { silent = true })
 
 local function lsp_keymap(ev)
-	vim.keymap.set( "n", "gd", vim.lsp.buf.definition, { desc = "Jump to the definition of the symbol under the cursor", buffer = ev.buf })
-	vim.keymap.set( "n", "gD", vim.lsp.buf.declaration, { desc = "Jump to the declaration of the symbol under the cursor", buffer = ev.buf })
-	vim.keymap.set("n", "gri", function()
-		MiniExtra.pickers.lsp({ scope = "implementation" })
-	end, { desc = "List all the implementations for the symbol under the cursor", buffer = ev.buf })
-	vim.keymap.set("n", "grr", function()
-		MiniExtra.pickers.lsp({ scope = "references" })
-	end, { desc = "List all the references to the symbol under the cursor", buffer = ev.buf })
-	vim.keymap.set( "n", "grt", vim.lsp.buf.type_definition, { desc = "Go to the definition of the type of the symbol under the cursor", buffer = ev.buf })
-	vim.keymap.set("n", "gO", function()
-		MiniExtra.pickers.lsp({ scope = "document_symbol" })
-	end, { desc = "List all symbols in the current buffer", buffer = ev.buf })
+	local function lsp_picker(scope)
+		return function() MiniExtra.pickers.lsp({ scope = scope }) end
+	end
+
+	vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Jump to the definition of the symbol under the cursor", buffer = ev.buf })
+	vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { desc = "Jump to the declaration of the symbol under the cursor", buffer = ev.buf })
+	vim.keymap.set("n", "gri", lsp_picker("implementation"), { desc = "List all the implementations for the symbol under the cursor", buffer = ev.buf })
+	vim.keymap.set("n", "grr", lsp_picker("references"), { desc = "List all the references to the symbol under the cursor", buffer = ev.buf })
+	vim.keymap.set("n", "grt", vim.lsp.buf.type_definition, { desc = "Go to the definition of the type of the symbol under the cursor", buffer = ev.buf })
+	vim.keymap.set("n", "gO", lsp_picker("document_symbol"), { desc = "List all symbols in the current buffer", buffer = ev.buf })
 end
 -- stylua: ignore end
 
