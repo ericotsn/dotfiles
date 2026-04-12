@@ -415,6 +415,7 @@ if _G.MiniPick ~= nil then
         for row, line in ipairs(vim.api.nvim_buf_get_lines(buf_id, 0, -1, false)) do
             local col = vim.fn.byteidx(line, 1)
             vim.api.nvim_buf_set_text(buf_id, row - 1, col, row - 1, col, { " " })
+            vim.api.nvim_buf_set_text(buf_id, row - 1, 0, row - 1, 0, { " " })
         end
     end
 end
