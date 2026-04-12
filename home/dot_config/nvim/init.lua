@@ -501,35 +501,6 @@ require("conform").setup({
         jsonc = { "oxfmt", "jq", stop_after_first = true },
         lua = { "stylua" },
     },
-    formatters = {
-        oxfmt = {
-            condition = function(_, ctx)
-                return vim.fs.find({ ".oxfmtrc.json", ".oxfmtrc.jsonc" }, {
-                    path = ctx.filename,
-                    upward = true,
-                    stop = vim.uv.os_homedir(),
-                })[1] ~= nil
-            end,
-        },
-        biome = {
-            condition = function(_, ctx)
-                return vim.fs.find({ "biome.json", "biome.jsonc" }, {
-                    path = ctx.filename,
-                    upward = true,
-                    stop = vim.uv.os_homedir(),
-                })[1] ~= nil
-            end,
-        },
-        ruff = {
-            condition = function(_, ctx)
-                return vim.fs.find({ "ruff.toml", ".ruff.toml" }, {
-                    path = ctx.filename,
-                    upward = true,
-                    stop = vim.uv.os_homedir(),
-                })[1] ~= nil
-            end,
-        },
-    },
 })
 
 -- blink.cmp ------------------------------------------------------------------
