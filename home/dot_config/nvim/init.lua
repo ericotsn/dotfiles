@@ -125,6 +125,14 @@ local function open_lazygit()
 	vim.cmd("startinsert")
 end
 
+local function toggle_qf()
+	if vim.fn.getqflist({ winid = 0 }).winid == 0 then
+		vim.cmd("copen")
+	else
+		vim.cmd("cclose")
+	end
+end
+
 -- [[ Autocommands ]] =========================================================
 
 vim.api.nvim_create_autocmd("TextYankPost", {
@@ -161,87 +169,100 @@ vim.api.nvim_create_autocmd("LspProgress", {
 })
 
 -- [[ Keymaps ]] ==============================================================
--- stylua: ignore start
 
-vim.keymap.set({ "i", "n", "v" }, "<C-c>", "<Esc>", { noremap = true, silent = true })
+local keymap_set = function(value)
+	local lhs, rhs, desc = value[1], value[2], value[3]
+	local mode = value.mode or "n"
+	local opts = {}
 
-vim.keymap.set({ "n", "v" }, "L", "$", { desc = "Jump to end of line" })
-vim.keymap.set({ "n", "v" }, "H", "^", { desc = "Jump to beginning of line" })
-
-vim.keymap.set("n", "\\w", ":set wrap!<CR>", { desc = "Toggle line wrap" })
-
-vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]], { desc = "Yank text into system clipboard" })
-vim.keymap.set("n", "<leader>Y", [["+Y]], { desc = "Yank current line into system clipboard" })
-
-vim.keymap.set("x", "<leader>p", [["_dP]], { desc = "Paste without overwriting register" })
-
-vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Scroll up and center cursor" })
-vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Scroll down and center cursor" })
-
-vim.keymap.set("n", "<leader>w", ":update<CR>", { desc = "Write the current buffer" })
-vim.keymap.set("n", "<leader>q", ":quit<CR>", { desc = "Quit the current file" })
-vim.keymap.set("n", "<leader>Q", ":wqa<CR>", { desc = "Write all buffers and quit" })
-
-vim.keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
-vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
-vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
-vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
-
--- vim.keymap.set("n", "<C-j>", ":cnext<CR>zz", { desc = "Display the next item in the quickfix list" })
--- vim.keymap.set("n", "<C-k>", ":cprev<CR>zz", { desc = "Display the previous item in the quickfix list" })
-vim.keymap.set("n", "<leader>co", ":copen<CR>zz", { desc = "Open the quickfix list", silent = true })
-vim.keymap.set("n", "<leader>cc", ":cclose<CR>zz", { desc = "Close the quickfix list", silent = true })
-
-for i = 1, 9 do
-	vim.keymap.set({ "n", "t" }, "<leader>" .. i, ":tabnext" .. i .. "<CR>")
-end
-
-vim.keymap.set("n", "<leader>a", ":edit #<CR>", { desc = "Open the alternate file" })
-
-vim.keymap.set("n", "<C-f>", ":Open .<CR>", { desc = "Open the current working directory with the system default handler" })
-
-vim.keymap.set("n", "]d", function() vim.diagnostic.jump({ count = 1, float = true }) end, { desc = "Jump to the next diagnostic" })
-vim.keymap.set("n", "[d", function() vim.diagnostic.jump({ count = -1, float = true }) end, { desc = "Jump to the previous diagnostic" })
-
-vim.keymap.set({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
-vim.keymap.set({ "n", "x" }, "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
-
-vim.keymap.set("n", "<leader>ld", vim.diagnostic.setqflist, { desc = "Add all diagnostics to the quickfix list" })
-
-vim.keymap.set("n", "-", ":Oil<CR>", { desc = "Open parent directory with Oil" })
-vim.keymap.set("n", "_", ":Oil .<CR>", { desc = "Open the current working directory with Oil" })
-
-vim.keymap.set({ "n", "x", "o" }, "s", "<Plug>(leap)")
-vim.keymap.set("n", "S", "<Plug>(leap-from-window)")
-
-vim.keymap.set("n", "<leader>sh", function() MiniPick.builtin.help() end, { desc = "Search help tags" })
-vim.keymap.set("n", "<leader>sk", function() MiniExtra.pickers.keymaps() end, { desc = "Search keymaps" })
-vim.keymap.set("n", "<leader>sf", function() MiniPick.builtin.files() end, { desc = "Search files" })
-vim.keymap.set("n", "<leader>sg", function() MiniPick.builtin.grep_live() end, { desc = "Search pattern matches with live feedback" })
-vim.keymap.set("n", "<leader>s.", function() MiniExtra.pickers.oldfiles() end, { desc = "Search recent files" })
-vim.keymap.set("n", "<leader><leader>", function() MiniPick.builtin.buffers() end, { desc = "Search buffers" })
-
-vim.keymap.set("n", "<leader>hi", ":Gitsigns preview_hunk_inline<CR>", { desc = "Preview inline hunk" })
-vim.keymap.set("n", "<leader>lh", ":Gitsigns setqflist<CR>", { desc = "Add all hunks to the quickfix list" })
-vim.keymap.set("n", "\\b", ":Gitsigns toggle_current_line_blame<CR>", { desc = "Toggle line blame" })
-vim.keymap.set("n", "]h", ":Gitsigns nav_hunk next<CR>", { desc = "Jump to the next hunk" })
-vim.keymap.set("n", "[h", ":Gitsigns nav_hunk prev<CR>", { desc = "Jump to the previous hunk" })
-
-vim.keymap.set("n", "<leader>gg", open_lazygit, { silent = true })
-
-local function lsp_keymap(ev)
-	local function lsp_picker(scope)
-		return function() MiniExtra.pickers.lsp({ scope = scope }) end
+	if type(desc) == "string" then
+		opts.desc = desc
 	end
 
-	vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Jump to the definition of the symbol under the cursor", buffer = ev.buf })
-	vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { desc = "Jump to the declaration of the symbol under the cursor", buffer = ev.buf })
-	vim.keymap.set("n", "gri", lsp_picker("implementation"), { desc = "List all the implementations for the symbol under the cursor", buffer = ev.buf })
-	vim.keymap.set("n", "grr", lsp_picker("references"), { desc = "List all the references to the symbol under the cursor", buffer = ev.buf })
-	vim.keymap.set("n", "grt", vim.lsp.buf.type_definition, { desc = "Go to the definition of the type of the symbol under the cursor", buffer = ev.buf })
-	vim.keymap.set("n", "gO", lsp_picker("document_symbol"), { desc = "List all symbols in the current buffer", buffer = ev.buf })
+	for k, v in pairs(value) do
+		if type(k) ~= "number" and k ~= "mode" then
+			opts[k] = v
+		end
+	end
+
+	vim.keymap.set(mode, lhs, rhs, opts)
 end
--- stylua: ignore end
+
+local keys = {
+	{ "<C-c>", "Esc", mode = { "i", "n", "v" }, noremap = true, silent = true },
+
+	{ "L", "$", "Jump to end of line", mode = { "n", "v" } },
+	{ "H", "^", "Jump to beginning of line", mode = { "n", "v" } },
+
+	{ "\\w", "<Cmd>set wrap!<CR>", "Toggle line wrap" },
+
+	{ "<Leader>y", [["+y]], "Yank text into system clipboard", mode = { "n", "v" } },
+	{ "<Leader>Y", [["+Y]], "Yank current line into system clipboard" },
+
+	{ "<Leader>p", [["_dP]], "Paste without overwriting register", mode = "x" },
+
+	{ "<C-u>", "<C-u>zz", "Scroll up and center cursor" },
+	{ "<C-d>", "<C-d>zz", "Scroll down and center cursor" },
+
+	{ "<Leader>w", "<Cmd>update<CR>", "Write the current buffer" },
+	{ "<Leader>q", "<Cmd>quit<CR>", "Quit the current file" },
+	{ "<Leader>Q", "<Cmd>wqa<CR>", "Write all buffers and quit" },
+
+	{ "<C-h>", "<C-w><C-h>", "Move focus to the left window" },
+	{ "<C-j>", "<C-w><C-j>", "Move focus to the lower window" },
+	{ "<C-k>", "<C-w><C-k>", "Move focus to the upper window" },
+	{ "<C-l>", "<C-w><C-l>", "Move focus to the right window" },
+
+	{ "<Leader>1", "<Cmd>tabnext1<CR>", mode = { "n", "t" } },
+	{ "<Leader>2", "<Cmd>tabnext2<CR>", mode = { "n", "t" } },
+	{ "<Leader>3", "<Cmd>tabnext3<CR>", mode = { "n", "t" } },
+	{ "<Leader>4", "<Cmd>tabnext4<CR>", mode = { "n", "t" } },
+	{ "<Leader>5", "<Cmd>tabnext5<CR>", mode = { "n", "t" } },
+	{ "<Leader>6", "<Cmd>tabnext6<CR>", mode = { "n", "t" } },
+	{ "<Leader>7", "<Cmd>tabnext7<CR>", mode = { "n", "t" } },
+	{ "<Leader>8", "<Cmd>tabnext8<CR>", mode = { "n", "t" } },
+	{ "<Leader>9", "<Cmd>tabnext9<CR>", mode = { "n", "t" } },
+
+	{ "<C-q>", toggle_qf, "Toggle the quickfix list", silent = true },
+	{ "<M-n>", "<Cmd>cnext<CR>zz", "Display the next item in the quickfix list" },
+	{ "<M-p>", "<Cmd>cprev<CR>zz", "Display the previous item in the quickfix list" },
+
+	{ "<Leader>a", "<Cmd>edit #<CR>", "Open the alternate file" },
+
+	{ "<C-f>", "<Cmd>Open .<CR>", "Open the current working directory with the system default handler" },
+
+	{ "<Leader>ld", "<Cmd>lua vim.diagnostic.setqflist()<CR>", "Add all diagnostics to the quickfix list" },
+	{ "]d", "<Cmd>lua vim.diagnostic.jump({ count = 1, float = true })<CR>", "Jump to the next diagnostic" },
+	{ "[d", "<Cmd>lua vim.diagnostic.jump({ count = -1, float = true })<CR>", "Jump to the previous diagnostic" },
+
+	{ "j", "v:count == 0 ? 'gj' : 'j'", mode = { "n", "x" }, expr = true, silent = true },
+	{ "k", "v:count == 0 ? 'gk' : 'k'", mode = { "n", "x" }, expr = true, silent = true },
+
+	{ "-", "<Cmd>Oil<CR>", "Open parent directory with Oil" },
+	{ "_", "<Cmd>Oil .<CR>", "Open the current working directory with Oil" },
+
+	{ "s", "<Plug>(leap)", mode = { "n", "x", "o" } },
+	{ "n", "S", "<Plug>(leap-from-window)" },
+
+	{ "<Leader>sh", "<Cmd>Pick help<CR>", "Search help tags" },
+	{ "<Leader>sk", "<Cmd>Pick keymaps<CR>", "Search keymaps" },
+	{ "<Leader>sf", "<Cmd>Pick files<CR>", "Search files" },
+	{ "<Leader>sg", "<Cmd>Pick grep_live<CR>", "Search patterns matches with live feedback" },
+	{ "<Leader>s.", "<Cmd>Pick oldfiles<CR>", "Search recent files" },
+	{ "<Leader><Leader>", "<Cmd>Pick buffers<CR>", "Search open buffers" },
+
+	{ "<Leader>hi", "<Cmd>Gitsigns preview_hunk_inline<CR>", "Preview inline hunk" },
+	{ "<Leader>lh", "<Cmd>Gitsigns setqflist<CR>", "Add all hunks to the quickfix list" },
+	{ "\\b", "<Cmd>Gitsigns toggle_current_line_blame<CR>", "Toggle line blame" },
+	{ "]h", "<Cmd>Gitsigns nav_hunk next<CR>", "Jump to the next hunk" },
+	{ "[h", "<Cmd>Gitsigns nav_hunk prev<CR>", "Jump to the previous hunk" },
+
+	{ "<Leader>gg", open_lazygit, silent = true },
+}
+
+for _, key in ipairs(keys) do
+	keymap_set(key)
+end
 
 -- [[ Plugins ]] ==============================================================
 
@@ -449,8 +470,6 @@ require("mason").setup()
 require("mason-lspconfig").setup({
 	ensure_installed = vim.tbl_keys(servers),
 })
-
-vim.api.nvim_create_autocmd("LspAttach", { callback = lsp_keymap })
 
 -- oil ------------------------------------------------------------------------
 vim.pack.add({
