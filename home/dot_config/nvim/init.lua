@@ -8,6 +8,7 @@ end
 -- [[ Options ]] ==============================================================
 
 vim.g.mapleader = " "
+vim.o.colorcolumn = "+1"
 vim.o.cursorline = true
 vim.o.expandtab = true
 vim.o.ignorecase = true
@@ -19,6 +20,7 @@ vim.o.scrolloff = 8
 vim.o.shiftwidth = 4
 vim.o.smartcase = true
 vim.o.tabstop = 4
+vim.o.textwidth = 80
 vim.o.timeoutlen = 300
 vim.o.undofile = true
 vim.o.updatetime = 250
@@ -34,14 +36,13 @@ vim.diagnostic.config({
             [vim.diagnostic.severity.HINT] = "?",
         },
     },
-    -- Show partial inline diagnostics on the current cursor line
     virtual_text = {
         current_line = true,
         severity = vim.diagnostic.severity.ERROR,
     },
 })
 
--- Custom 'statuscolumn' for Neovim >= 0.9
+-- Custom 'statuscolumn' for Neovim
 vim.o.statuscolumn = "%!v:lua.StatusColumn()"
 
 function _G.StatusColumn()
@@ -126,11 +127,7 @@ local function open_lazygit()
 end
 
 local function toggle_qf()
-    if vim.fn.getqflist({ winid = 0 }).winid == 0 then
-        vim.cmd("copen")
-    else
-        vim.cmd("cclose")
-    end
+    vim.cmd(vim.fn.getqflist({ winid = true }).winid ~= 0 and "cclose" or "copen")
 end
 
 -- [[ Autocommands ]] =========================================================
@@ -242,7 +239,7 @@ local keys = {
     { "_", "<Cmd>Oil .<CR>", "Open the current working directory with Oil" },
 
     { "s", "<Plug>(leap)", mode = { "n", "x", "o" } },
-    { "n", "S", "<Plug>(leap-from-window)" },
+    { "S", "<Plug>(leap-from-window)" },
 
     { "<Leader>sh", "<Cmd>Pick help<CR>", "Search help tags" },
     { "<Leader>sk", "<Cmd>Pick keymaps<CR>", "Search keymaps" },
@@ -292,6 +289,7 @@ require("catppuccin").setup({
             MiniCursorwordCurrent = { link = "MiniCursorword" },
             UfoFoldedEllipsis = { fg = colors.sky, bg = colors.none },
             Visual = { bg = colors.surface1, style = {} },
+            ColorColumn = { bg = darken(colors.base, 0.94) },
         }
     end,
 })
