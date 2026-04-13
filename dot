@@ -2,7 +2,6 @@
 
 set -euo pipefail
 
-readonly SCRIPT_NAME="dot"
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly DOTFILES_DIR
 
@@ -10,15 +9,15 @@ readonly PACKAGES_DIR="${DOTFILES_DIR}/packages"
 readonly FONT_REPO_URL="git@github.com:ericotsn/pragmatapro.git"
 
 print_error() {
-	echo -e "\033[31m$1\033[0m" >&2
+	echo -e "\033[31m[ERROR]\033[0m $1" >&2
 }
 
 print_success() {
-	echo -e "\033[32m$1\033[0m"
+	echo -e "\033[32m[OK]\033[0m $1"
 }
 
 print_warning() {
-	echo -e "\033[33m$1\033[0m"
+	echo -e "\033[33m[WARNING]\033[0m $1"
 }
 
 command_exists() {
@@ -38,17 +37,19 @@ install_homebrew() {
 	local log_file
 	log_file="$(mktemp)"
 
-	if NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" >"${log_file}" 2>&1; then
+	NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" >"${log_file}" 2>&1
+	local exit_code=$?
+
+	if [[ $exit_code -eq 0 ]]; then
 		print_success "Homebrew installed successfully"
 		eval "$(/opt/homebrew/bin/brew shellenv)"
-		rm -f "${log_file}"
 	else
-		local exit_code=$?
 		print_error "Homebrew installation failed (exit code: ${exit_code})"
 		cat "${log_file}" >&2
-		rm -f "${log_file}"
-		return 1
 	fi
+
+	rm -f "${log_file}"
+	return ${exit_code}
 }
 
 install_packages() {
@@ -66,7 +67,52 @@ install_packages() {
 	fi
 }
 
-apply_dotfiles() {
+install_font() {
+	echo ">> Installing PragmataPro font"
+
+	if ! command_exists fc-list; then
+		print_error "fc-list (fontconfig) is not installed"
+		return 1
+	fi
+
+	if fc-list --quiet "PragmataPro"; then
+		print_success "PragmataPro font is already installed"
+		return 0
+	fi
+
+	local font_temp_dir
+	font_temp_dir=$(mktemp -d)
+
+	echo "Cloning font repository..."
+	if git clone "${FONT_REPO_URL}" "${font_temp_dir}"; then
+		print_success "Repository cloned successfully"
+	else
+		print_error "Failed to clone font repository"
+		rm -rf "${font_temp_dir}"
+		return 1
+	fi
+
+	local font_install_dir="${HOME}/Library/Fonts"
+
+	mkdir -p "${font_install_dir}"
+	echo "Installing font files..."
+
+	local font_count=0
+	while IFS= read -r -d '' font_file; do
+		cp "${font_file}" "${font_install_dir}/"
+		((++font_count))
+	done < <(find "${font_temp_dir}" -type f \( -name '*.otf' -o -name '*.ttf' \) -print0)
+
+	if [[ ${font_count} -gt 0 ]]; then
+		print_success "Installed ${font_count} font files"
+	else
+		print_warning "No font files found in repository"
+	fi
+
+	rm -rf "${font_temp_dir}"
+}
+
+setup_dotfiles() {
 	echo ">> Applying dotfiles"
 
 	if ! command_exists chezmoi; then
@@ -82,41 +128,6 @@ apply_dotfiles() {
 	fi
 }
 
-install_font() {
-	echo ">> Installing PragmataPro font"
-
-	local font_temp_dir
-	font_temp_dir=$(mktemp -d)
-
-	local font_install_dir="${HOME}/Library/Fonts"
-
-	echo "Cloning font repository..."
-	if git clone "${FONT_REPO_URL}" "${font_temp_dir}"; then
-		print_success "Repository cloned successfully"
-
-		mkdir -p "${font_install_dir}"
-		echo "Installing font files..."
-
-		local font_count=0
-		while IFS= read -r -d '' font_file; do
-			cp "${font_file}" "${font_install_dir}/"
-			((++font_count))
-		done < <(find "${font_temp_dir}" -type f \( -name '*.otf' -o -name '*.ttf' \) -print0)
-
-		if [[ ${font_count} -gt 0 ]]; then
-			print_success "Installed ${font_count} font files"
-		else
-			print_warning "No font files found in repository"
-		fi
-
-		rm -rf "${font_temp_dir}"
-	else
-		print_error "Failed to clone font repository"
-		rm -rf "${font_temp_dir}"
-		return 1
-	fi
-}
-
 setup_fish_shell() {
 	echo ">> Setting up Fish shell"
 
@@ -128,7 +139,6 @@ setup_fish_shell() {
 	local fish_path
 	fish_path="$(command -v fish)"
 
-	# Add fish to /etc/shells if needed
 	if ! grep -q "${fish_path}" /etc/shells; then
 		echo "Appending ${fish_path} to /etc/shells..."
 		echo "${fish_path}" | sudo tee -a /etc/shells >/dev/null
@@ -146,46 +156,24 @@ setup_fish_shell() {
 	fi
 }
 
-cmd_init() {
-	echo "Initializing dotfiles"
-
-	install_homebrew || return 1
-	install_packages || return 1
-	apply_dotfiles || return 1
-
-	if [[ "${SKIP_FONT:-true}" != "true" ]]; then
-		install_font || print_warning "Font installation failed (continuing)"
-	fi
-
-	setup_fish_shell || return 1
-
-	echo "Initialization complete! 🎉"
-}
-
 main() {
-	if [[ $# -lt 1 ]]; then
-		echo "Usage: ${SCRIPT_NAME} [--install-font] <command>"
-		exit 1
-	fi
-
-	while [[ $# -gt 0 ]]; do
-		case "$1" in
-		--install-font)
-			export SKIP_FONT=false
-			shift
-			;;
-		*)
-			break
-			;;
-		esac
-	done
-
 	local command="${1:-}"
 	shift || true
 
 	case "${command}" in
 	init)
-		cmd_init "$@"
+		echo "Initializing dotfiles"
+
+		install_homebrew || return 1
+		install_packages || return 1
+		install_font     || return 1
+		setup_fish_shell || return 1
+		setup_dotfiles   || return 1
+
+		echo "Initialization complete! 🎉"
+		;;
+	apply)
+		setup_dotfiles || return 1
 		;;
 	*)
 		print_error "Unknown command: ${command}"
