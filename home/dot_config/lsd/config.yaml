@@ -1,2 +1,5 @@
 color:
   theme: custom
+
+icons:
+  separator: "  "
