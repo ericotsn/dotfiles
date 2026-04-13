@@ -7,25 +7,30 @@ end
 
 -- [[ Options ]] ==============================================================
 
-vim.g.mapleader = " "
-vim.o.colorcolumn = "+1"
-vim.o.cursorline = true
-vim.o.expandtab = true
-vim.o.ignorecase = true
-vim.o.inccommand = "split"
-vim.o.mouse = "a"
-vim.o.number = true
-vim.o.relativenumber = true
-vim.o.scrolloff = 8
-vim.o.shiftwidth = 4
-vim.o.smartcase = true
-vim.o.tabstop = 4
-vim.o.textwidth = 80
-vim.o.timeoutlen = 300
-vim.o.undofile = true
-vim.o.updatetime = 250
-vim.o.winborder = "rounded"
-vim.o.wrap = false
+vim.g.mapleader = " " -- Use space as the one and only true Leader key
+
+-- General
+vim.o.mouse = "a" -- Enable mouse support for all available modes
+vim.o.undofile = true -- Enable persistent undo (see also `:h undodir`)
+vim.o.writebackup = false -- Disable write backups to preserve inodes
+
+-- Appearance
+vim.o.colorcolumn = "+1" -- Highlight column after 'textwidth'
+vim.o.cursorline = true -- Highlight current line
+vim.o.linebreak = true -- Wrap long lines at 'breakat' (if 'wrap' is set)
+vim.o.number = true -- Show absolute line numbers
+vim.o.splitbelow = true -- Open horizontal splits below
+vim.o.splitkeep = "screen" -- Keep screen contents stable when splitting
+vim.o.splitright = true -- Open vertical splits to the right
+vim.o.winborder = "rounded" -- Use rounded borders for floating windows
+
+-- Editing
+vim.o.expandtab = true -- Convert tabs to spaces
+vim.o.ignorecase = true -- Ignore case when searching (UNLESS `\C` or uppercase)
+vim.o.inccommand = "split" -- Show substitution previews in a split window
+vim.o.shiftwidth = 4 -- Number of spaces to use for each step of indentation
+vim.o.smartcase = true -- Override 'ignorecase' if search pattern contains uppercase
+vim.o.tabstop = 4 -- Number of spaces each tab counts for
 
 vim.diagnostic.config({
     signs = {
@@ -186,7 +191,7 @@ local keymap_set = function(value)
 end
 
 local keys = {
-    { "<C-c>", "Esc", mode = { "i", "n", "v" }, noremap = true, silent = true },
+    { "<C-c>", "<Esc>", mode = { "i", "n", "v" }, noremap = true, silent = true },
 
     { "L", "$", "Jump to end of line", mode = { "n", "v" } },
     { "H", "^", "Jump to beginning of line", mode = { "n", "v" } },
@@ -210,15 +215,18 @@ local keys = {
     { "<C-k>", "<C-w><C-k>", "Move focus to the upper window" },
     { "<C-l>", "<C-w><C-l>", "Move focus to the right window" },
 
-    { "<Leader>1", "<Cmd>tabnext1<CR>", mode = { "n", "t" } },
-    { "<Leader>2", "<Cmd>tabnext2<CR>", mode = { "n", "t" } },
-    { "<Leader>3", "<Cmd>tabnext3<CR>", mode = { "n", "t" } },
-    { "<Leader>4", "<Cmd>tabnext4<CR>", mode = { "n", "t" } },
-    { "<Leader>5", "<Cmd>tabnext5<CR>", mode = { "n", "t" } },
-    { "<Leader>6", "<Cmd>tabnext6<CR>", mode = { "n", "t" } },
-    { "<Leader>7", "<Cmd>tabnext7<CR>", mode = { "n", "t" } },
-    { "<Leader>8", "<Cmd>tabnext8<CR>", mode = { "n", "t" } },
-    { "<Leader>9", "<Cmd>tabnext9<CR>", mode = { "n", "t" } },
+    { "<C-1>", "<Cmd>tabnext1<CR>", mode = { "n", "t" } },
+    { "<C-2>", "<Cmd>tabnext2<CR>", mode = { "n", "t" } },
+    { "<C-3>", "<Cmd>tabnext3<CR>", mode = { "n", "t" } },
+    { "<C-4>", "<Cmd>tabnext4<CR>", mode = { "n", "t" } },
+    { "<C-5>", "<Cmd>tabnext5<CR>", mode = { "n", "t" } },
+    { "<C-6>", "<Cmd>tabnext6<CR>", mode = { "n", "t" } },
+    { "<C-7>", "<Cmd>tabnext7<CR>", mode = { "n", "t" } },
+    { "<C-8>", "<Cmd>tabnext8<CR>", mode = { "n", "t" } },
+    { "<C-9>", "<Cmd>tabnext9<CR>", mode = { "n", "t" } },
+
+    { "<Leader>tt", "<Cmd>tab term<CR>", "Open terminal in new tab" },
+    { "<Leader>tv", "<Cmd>vert term<CR>", "Open terminal in vertical split" },
 
     { "<C-q>", toggle_qf, "Toggle the quickfix list", silent = true },
     { "<M-n>", "<Cmd>cnext<CR>zz", "Display the next item in the quickfix list" },
