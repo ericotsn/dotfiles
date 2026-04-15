@@ -453,6 +453,7 @@ vim.pack.add {
 local servers = {
   basedpyright = {},
   biome = {},
+  clangd = {},
   lua_ls = {
     settings = {
       Lua = {
@@ -528,9 +529,12 @@ vim.pack.add {
 }
 
 require("blink.cmp").setup {
-  keymap = { preset = "default" },
+  keymap = { preset = "enter" },
   appearance = { nerd_font_variant = "normal" },
-  completion = { documentation = { auto_show = true } },
+  completion = {
+    documentation = { auto_show = true },
+    list = { selection = { preselect = false, auto_insert = true } },
+  },
   sources = { default = { "lsp", "path", "snippets", "buffer" } },
   fuzzy = { implementation = "prefer_rust_with_warning" },
 }
