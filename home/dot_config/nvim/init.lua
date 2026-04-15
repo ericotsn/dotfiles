@@ -167,6 +167,15 @@ vim.api.nvim_create_autocmd("LspProgress", {
   end,
 })
 
+vim.api.nvim_create_autocmd("TermOpen", {
+  desc = "Enter insert mode when a terminal job is starting",
+  callback = function()
+    if vim.opt.buftype:get() == "terminal" then
+      vim.cmd ":startinsert"
+    end
+  end,
+})
+
 -- [[ Keymaps ]] ==============================================================
 
 local keymap_set = function(value)
@@ -207,11 +216,6 @@ local keys = {
   { "<Leader>q", "<Cmd>quit<CR>", "Quit the current file" },
   { "<Leader>Q", "<Cmd>wqa<CR>", "Write all buffers and quit" },
 
-  { "<C-h>", "<C-w><C-h>", "Move focus to the left window" },
-  { "<C-j>", "<C-w><C-j>", "Move focus to the lower window" },
-  { "<C-k>", "<C-w><C-k>", "Move focus to the upper window" },
-  { "<C-l>", "<C-w><C-l>", "Move focus to the right window" },
-
   { "<C-1>", "<Cmd>tabnext1<CR>", mode = { "n", "t" } },
   { "<C-2>", "<Cmd>tabnext2<CR>", mode = { "n", "t" } },
   { "<C-3>", "<Cmd>tabnext3<CR>", mode = { "n", "t" } },
@@ -224,6 +228,9 @@ local keys = {
 
   { "<Leader>tt", "<Cmd>tab term<CR>", "Open terminal in new tab" },
   { "<Leader>tv", "<Cmd>vert term<CR>", "Open terminal in vertical split" },
+
+  { "<C-]>", [[<C-\><C-n>]], mode = { "t" } },
+  { "<C-w>", [[<C-\><C-n><C-w>]], mode = { "t" }, noremap = true },
 
   { "<C-q>", toggle_qf, "Toggle the quickfix list", silent = true },
   { "<M-n>", "<Cmd>cnext<CR>zz", "Display the next item in the quickfix list" },
