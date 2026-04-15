@@ -1,57 +1,68 @@
 [commit]
-	gpgsign = true
+  gpgsign = true
 
 [core]
-	fsmonitor = true
-	{{- if and (eq .chezmoi.os "linux") (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
-	sshCommand = ssh.exe
-	{{- end }}
+  fsmonitor = true
 
 [diff]
-	tool = vscode
+  {{- if eq .chezmoi.os "darwin" }}
+  tool = vscode
+  {{- else }}
+  tool = nvim
+  {{- end }}
+
+[difftool "nvim"]
+  cmd = nvim -d "$LOCAL" "$REMOTE"
 
 [difftool "vscode"]
-	cmd = "code --wait --diff $LOCAL $REMOTE"
+  cmd = code --wait --diff "$LOCAL" "$REMOTE"
 
 [fetch]
-	prune = true
-	writeCommitGraph = true
+  prune = true
+  writeCommitGraph = true
 
 [gpg]
-	format = ssh
+  format = ssh
 
 [gpg "ssh"]
-	{{- if and (eq .chezmoi.os "linux") (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
-	program = "/mnt/c/Users/erico/AppData/Local/Microsoft/WindowsApps/op-ssh-sign-wsl.exe"
-	{{- else }}
-	program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
-	{{- end }}
+  {{- if eq .chezmoi.os "darwin" }}
+  program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+  {{- else }}
+  program = "/opt/1Password/op-ssh-sign"
+  {{- end }}
 
 [init]
-	defaultBranch = "main"
+  defaultBranch = main
 
 [merge]
-	tool = vscode
+  {{- if eq .chezmoi.os "darwin" }}
+  tool = vscode
+  {{- else }}
+  tool = nvim
+  {{- end }}
+
+[mergetool "nvim"]
+  cmd = nvim -d "$LOCAL" "$MERGED" "$REMOTE"
 
 [mergetool "vscode"]
-	cmd = "code --wait $MERGED"
+  cmd = code --wait "$MERGED"
 
 [pull]
-	rebase = true
+  rebase = true
 
 [rebase]
-	updateRefs = true
+  updateRefs = true
 
 [rerere]
-	enabled = true
+  enabled = true
 
 [tag]
-	gpgSign = true
+  gpgSign = true
 
 [user]
-	email = "contact@ericotsn.com"
-	name = "Eric Ottosson"
-	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDMnOYyqkEucM6WGm2kRscLWw7SKFTfuaJpPkiZeOECw
+  email = contact@ericotsn.com
+  name = Eric Ottosson
+  signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDMnOYyqkEucM6WGm2kRscLWw7SKFTfuaJpPkiZeOECw
 
 [includeIf "gitdir:~/Developer/work/"]
-	path = "~/Developer/work/.gitconfig"
+  path = ~/Developer/work/.gitconfig

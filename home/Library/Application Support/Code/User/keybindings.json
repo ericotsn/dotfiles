@@ -1,73 +1,73 @@
 [
-    {
-        "key": "cmd+k cmd+g",
-        "command": "workbench.action.tasks.runTask",
-        "args": "lazygit"
-    },
-    // The default Search view is awful, but the Search Editor is pretty nice.
-    // Strangely, it doesn’t come with default keybindings.
-    {
-        "key": "cmd+k s",
-        "command": "search.action.openEditor"
-    },
-    {
-        "key": "cmd+k shift+s",
-        "command": "search.action.openNewEditor"
-    },
-    {
-        "key": "enter",
-        "command": "search.focus.nextInputBox",
-        "when": "inSearchEditor && inputBoxFocus || inputBoxFocus && searchViewletVisible"
-    },
-    {
-        "key": "cmd+enter",
-        "command": "editor.action.revealDefinition",
-        "when": "inSearchEditor"
-    },
-    // For a Copilot-focused editor, it's odd there are no default keybindings
-    // to attach the current selection or file to the chat.
-    {
-        "key": "shift+cmd+a",
-        "command": "github.copilot.chat.attachSelection",
-        "when": "editorTextFocus && editorHasSelection"
-    },
-    {
-        "key": "shift+cmd+a",
-        "command": "github.copilot.chat.attachFile",
-        "when": "editorTextFocus && !editorHasSelection"
-    },
-    // The "cmd+x cmd+m" chord is used to maximize the Editor Group view by
-    // default, so let's extend it to the panel and auxiliary bar as well.
-    {
-        "key": "cmd+k cmd+m",
-        "command": "workbench.action.toggleMaximizedPanel",
-        "when": "panelFocus"
-    },
-    {
-        "key": "cmd+k cmd+m",
-        "command": "workbench.action.toggleMaximizedAuxiliaryBar",
-        "when": "auxiliaryBarFocus"
-    },
-    // Redefine keybindings to override vscode-neovim and restore default Tab,
-    // Shift+Tab, and Escape behavior for inline suggestions.
-    {
-        "key": "tab",
-        "command": "editor.action.inlineSuggest.commit",
-        "when": "inlineEditIsVisible && tabShouldAcceptInlineEdit && !editorHoverFocused && !editorTabMovesFocus && !suggestWidgetVisible || inlineEditIsVisible && inlineSuggestionVisible && tabShouldAcceptInlineEdit && !editorHoverFocused && !editorTabMovesFocus && !suggestWidgetVisible || inlineSuggestionHasIndentationLessThanTabSize && inlineSuggestionVisible && !editor.hasSelection && !editorHoverFocused && !editorTabMovesFocus && !suggestWidgetVisible || inlineEditIsVisible && inlineSuggestionHasIndentationLessThanTabSize && inlineSuggestionVisible && !editor.hasSelection && !editorHoverFocused && !editorTabMovesFocus && !suggestWidgetVisible"
-    },
-    {
-        "key": "tab",
-        "command": "editor.action.inlineSuggest.jump",
-        "when": "inlineEditIsVisible && tabShouldJumpToInlineEdit && !editorHoverFocused && !editorTabMovesFocus && !suggestWidgetVisible"
-    },
-    {
-        "key": "shift+tab",
-        "command": "editor.action.inlineSuggest.commitAlternativeAction",
-        "when": "inlineEditIsVisible && inlineSuggestionAlternativeActionVisible"
-    },
-    {
-        "key": "escape",
-        "command": "editor.action.inlineSuggest.hide",
-        "when": "inlineEditIsVisible || inlineSuggestionVisible"
-    }
+  {
+    "key": "cmd+k cmd+g",
+    "command": "workbench.action.tasks.runTask",
+    "args": "lazygit"
+  },
+  // The default Search view is awful, but the Search Editor is pretty nice.
+  // Strangely, it doesn’t come with default keybindings.
+  {
+    "key": "cmd+k s",
+    "command": "search.action.openEditor"
+  },
+  {
+    "key": "cmd+k shift+s",
+    "command": "search.action.openNewEditor"
+  },
+  {
+    "key": "enter",
+    "command": "search.focus.nextInputBox",
+    "when": "inSearchEditor && inputBoxFocus || inputBoxFocus && searchViewletVisible"
+  },
+  {
+    "key": "cmd+enter",
+    "command": "editor.action.revealDefinition",
+    "when": "inSearchEditor"
+  },
+  // For a Copilot-focused editor, it's odd there are no default keybindings
+  // to attach the current selection or file to the chat.
+  {
+    "key": "shift+cmd+a",
+    "command": "github.copilot.chat.attachSelection",
+    "when": "editorTextFocus && editorHasSelection"
+  },
+  {
+    "key": "shift+cmd+a",
+    "command": "github.copilot.chat.attachFile",
+    "when": "editorTextFocus && !editorHasSelection"
+  },
+  // The "cmd+x cmd+m" chord is used to maximize the Editor Group view by
+  // default, so let's extend it to the panel and auxiliary bar as well.
+  {
+    "key": "cmd+k cmd+m",
+    "command": "workbench.action.toggleMaximizedPanel",
+    "when": "panelFocus"
+  },
+  {
+    "key": "cmd+k cmd+m",
+    "command": "workbench.action.toggleMaximizedAuxiliaryBar",
+    "when": "auxiliaryBarFocus"
+  },
+  // Redefine keybindings to override vscode-neovim and restore default Tab,
+  // Shift+Tab, and Escape behavior for inline suggestions.
+  {
+    "key": "tab",
+    "command": "editor.action.inlineSuggest.commit",
+    "when": "inlineEditIsVisible && tabShouldAcceptInlineEdit && !editorHoverFocused && !editorTabMovesFocus && !suggestWidgetVisible || inlineEditIsVisible && inlineSuggestionVisible && tabShouldAcceptInlineEdit && !editorHoverFocused && !editorTabMovesFocus && !suggestWidgetVisible || inlineSuggestionHasIndentationLessThanTabSize && inlineSuggestionVisible && !editor.hasSelection && !editorHoverFocused && !editorTabMovesFocus && !suggestWidgetVisible || inlineEditIsVisible && inlineSuggestionHasIndentationLessThanTabSize && inlineSuggestionVisible && !editor.hasSelection && !editorHoverFocused && !editorTabMovesFocus && !suggestWidgetVisible"
+  },
+  {
+    "key": "tab",
+    "command": "editor.action.inlineSuggest.jump",
+    "when": "inlineEditIsVisible && tabShouldJumpToInlineEdit && !editorHoverFocused && !editorTabMovesFocus && !suggestWidgetVisible"
+  },
+  {
+    "key": "shift+tab",
+    "command": "editor.action.inlineSuggest.commitAlternativeAction",
+    "when": "inlineEditIsVisible && inlineSuggestionAlternativeActionVisible"
+  },
+  {
+    "key": "escape",
+    "command": "editor.action.inlineSuggest.hide",
+    "when": "inlineEditIsVisible || inlineSuggestionVisible"
+  }
 ]

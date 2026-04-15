@@ -1,0 +1,15 @@
+ShellCheck
+chezmoi
+direnv
+fd
+fish
+fzf
+git
+google-chrome-stable
+jq
+just
+lsd
+ripgrep
+shfmt
+tree-sitter-cli
+zoxide
