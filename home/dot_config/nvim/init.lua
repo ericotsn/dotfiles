@@ -513,6 +513,8 @@ require("conform").setup {
     lsp_format = "fallback",
   },
   formatters_by_ft = {
+    c = { "clang-format" },
+    cpp = { "clang-format" },
     javascript = { "oxfmt", "biome", "prettierd", stop_after_first = true },
     typescript = { "oxfmt", "biome", "prettierd", stop_after_first = true },
     typescriptreact = { "oxfmt", "biome", "prettierd", stop_after_first = true },
