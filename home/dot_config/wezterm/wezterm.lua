@@ -4,8 +4,15 @@ local config = wezterm.config_builder()
 
 config.color_scheme = "Catppuccin Latte"
 
-config.font = wezterm.font "Maple Mono NF"
-config.font_size = 14
+config.font = wezterm.font_with_fallback {
+  {
+    family = "PragmataPro Liga",
+    harfbuzz_features = { "ss13", "ss15" },
+  },
+  "Symbols Nerd font Mono",
+}
+config.font_size = 16
+config.cell_width = 1.04
 
 config.hide_tab_bar_if_only_one_tab = true
 config.tab_bar_at_bottom = true
