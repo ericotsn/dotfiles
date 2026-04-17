@@ -9,7 +9,6 @@ config.font = wezterm.font_with_fallback {
     family = "PragmataPro Liga",
     harfbuzz_features = { "ss13", "ss15" },
   },
-  "Symbols Nerd font Mono",
 }
 config.font_size = 16
 config.cell_width = 1.04
