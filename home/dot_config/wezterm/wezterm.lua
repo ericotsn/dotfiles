@@ -11,7 +11,7 @@ config.font = wezterm.font_with_fallback {
   },
   "Symbols Nerd font Mono",
 }
-config.font_size = 14
+config.font_size = 16
 config.cell_width = 1.04
 
 config.hide_tab_bar_if_only_one_tab = true
