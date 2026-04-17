@@ -295,18 +295,18 @@ require("catppuccin").setup {
     return {
       CursorLine = { bg = colors.none },
       Folded = { bg = darken(colors.sky, 0.14, colors.base) },
-      IblIndent = { fg = colors.surface0 },
-      IblScope = { fg = colors.surface1 },
-      MiniCursorword = { bg = colors.crust, style = {} },
+      IblIndent = { fg = colors.surface1 },
+      IblScope = { fg = colors.surface2 },
+      MiniCursorword = { bg = colors.surface0, style = {} },
       MiniCursorwordCurrent = { link = "MiniCursorword" },
       UfoFoldedEllipsis = { fg = colors.sky, bg = colors.none },
-      Visual = { bg = colors.surface0, style = {} },
-      ColorColumn = { bg = colors.mantle },
+      Visual = { bg = colors.surface1, style = {} },
+      ColorColumn = { bg = darken(colors.base, 0.94) },
     }
   end,
 }
 
-vim.cmd.colorscheme "catppuccin-latte"
+vim.cmd.colorscheme "catppuccin-mocha"
 
 -- nvim-treesitter ------------------------------------------------------------
 vim.pack.add {
