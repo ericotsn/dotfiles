@@ -7,7 +7,8 @@
     80
   ],
   "extensions.experimental.affinity": {
-    "asvetliakov.vscode-neovim": 1
+    "asvetliakov.vscode-neovim": 1,
+    "vscodevim.vim": 1
   },
   "files.insertFinalNewline": true,
   "terminal.integrated.fontLigatures.enabled": true,

@@ -1,4 +1,0 @@
-{{ if ne .chezmoi.os "darwin" }}
-Library/
-.aerospace.toml
-{{ end }}

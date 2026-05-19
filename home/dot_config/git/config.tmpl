@@ -5,11 +5,7 @@
   fsmonitor = true
 
 [diff]
-  {{- if eq .chezmoi.os "darwin" }}
   tool = vscode
-  {{- else }}
-  tool = nvim
-  {{- end }}
 
 [difftool "nvim"]
   cmd = nvim -d "$LOCAL" "$REMOTE"
@@ -25,21 +21,13 @@
   format = ssh
 
 [gpg "ssh"]
-  {{- if eq .chezmoi.os "darwin" }}
   program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
-  {{- else }}
-  program = "/opt/1Password/op-ssh-sign"
-  {{- end }}
 
 [init]
   defaultBranch = main
 
 [merge]
-  {{- if eq .chezmoi.os "darwin" }}
   tool = vscode
-  {{- else }}
-  tool = nvim
-  {{- end }}
 
 [mergetool "nvim"]
   cmd = nvim -d "$LOCAL" "$MERGED" "$REMOTE"
