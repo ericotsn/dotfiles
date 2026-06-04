@@ -6,7 +6,7 @@
     {
       "label": "lazygit",
       "type": "shell",
-      "command": "lazygit",
+      "command": "lazygit --ucd /tmp/lazygit",
       "presentation": {
         "echo": true,
         "reveal": "always",
