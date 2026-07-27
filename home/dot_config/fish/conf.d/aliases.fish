@@ -1,6 +1,5 @@
-alias l 'lsd -l'
-alias la 'lsd -a'
-alias lla 'lsd -la'
-alias lt 'lsd --tree'
+alias ls 'ls --color=auto'
+alias la 'ls -Alh'
 
-alias vim 'nvim'
+alias lg 'lazygit'
+alias nv 'nvim'
