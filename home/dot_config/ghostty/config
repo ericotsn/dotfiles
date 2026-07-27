@@ -1,14 +1,8 @@
-theme = Catppuccin Frappe
-
-font-family = PragmataPro Liga
-font-feature = ss13,ss15
-font-size = 16.0
-font-thicken = true
-
-adjust-cell-height = 13
-window-padding-balance = true
-
-macos-option-as-alt = true
+adjust-cell-height = 4
+font-family = PragmataPro Mono
+font-size = 18.0
+macos-option-as-alt = left
 macos-titlebar-proxy-icon = hidden
-macos-titlebar-style = tabs
 mouse-hide-while-typing = true
+theme = dark:Catppuccin Macchiato,light:Catppuccin Latte
+window-padding-balance = true
