@@ -1,542 +1,301 @@
-if vim.g.vscode then
-  return
+vim.g.mapleader = " "
+vim.g.maplocalleader = "\\"
+
+if vim.g.neovide then
+    vim.o.guifont = "PragmataPro Mono:h18"
+    vim.g.neovide_input_macos_option_key_is_meta = "only_left"
+
+    vim.keymap.set({ "n", "i", "v" }, "<D-v>", function()
+        vim.api.nvim_paste(vim.fn.getreg "+", true, -1)
+    end)
 end
 
--- [[ Options ]] ==============================================================
-
-vim.g.mapleader = " " -- Use space as the one and only true Leader key
-
--- General
-vim.o.mouse = "a" -- Enable mouse support for all available modes
-vim.o.undofile = true -- Enable persistent undo (see also `:h undodir`)
-vim.o.writebackup = false -- Disable write backups to preserve inodes
-
--- Appearance
-vim.o.colorcolumn = "+1" -- Highlight column after 'textwidth'
-vim.o.cursorline = true -- Highlight current line
-vim.o.linebreak = true -- Wrap long lines at 'breakat' (if 'wrap' is set)
-vim.o.number = true -- Show absolute line numbers
-vim.o.splitbelow = true -- Open horizontal splits below
-vim.o.splitkeep = "screen" -- Keep screen contents stable when splitting
-vim.o.splitright = true -- Open vertical splits to the right
-vim.o.winborder = "rounded" -- Use rounded borders for floating windows
-
--- Editing
-vim.o.expandtab = true -- Convert tabs to spaces
-vim.o.ignorecase = true -- Ignore case when searching (UNLESS `\C` or uppercase)
-vim.o.inccommand = "split" -- Show substitution previews in a split window
-vim.o.shiftwidth = 4 -- Number of spaces to use for each step of indentation
-vim.o.smartcase = true -- Override 'ignorecase' if search pattern contains uppercase
-vim.o.tabstop = 4 -- Number of spaces each tab counts for
+-- Options =============================================================== {{{1
 
 vim.diagnostic.config {
-  signs = {
-    text = {
-      [vim.diagnostic.severity.ERROR] = "‼",
-      [vim.diagnostic.severity.WARN] = "!",
-      [vim.diagnostic.severity.INFO] = "⁇",
-      [vim.diagnostic.severity.HINT] = "?",
-    },
-  },
-  virtual_text = {
-    current_line = true,
-    severity = vim.diagnostic.severity.ERROR,
-  },
+    virtual_text = { current_line = true },
 }
 
--- Custom 'statuscolumn' for Neovim
-vim.o.statuscolumn = "%!v:lua.StatusColumn()"
+-- Show a live preview of substitutions in a separate split while typing.
+vim.o.inccommand = "split"
 
-function _G.StatusColumn()
-  local row = vim.v.lnum - 1 -- The extmark API is 0-based
-  local buffer = vim.api.nvim_win_get_buf(vim.g.statusline_winid)
-  local marks = vim.api.nvim_buf_get_extmarks(buffer, -1, { row, 0 }, { row, -1 }, { details = true, type = "sign" })
-  local sign, git = "  ", " "
+-- Wrap long lines at word boundaries.
+vim.o.linebreak = true
 
-  for _, mark in ipairs(marks) do
-    local d = mark[4]
-    local hl = d.sign_hl_group or ""
+-- Open new splits in predictable locations and preserve the visible text
+-- position when a window is resized.
+vim.o.splitbelow = true
+vim.o.splitkeep = "screen"
+vim.o.splitright = true
 
-    if hl:find("GitSign", 1, true) then
-      git = "%#" .. hl .. "#" .. vim.fn.strcharpart(d.sign_text or " ", 0, 1) .. "%*"
-    elseif hl ~= "" then
-      sign = "%#" .. hl .. "#" .. (d.sign_text or "  ") .. "%*"
-    else
-      sign = d.sign_text or "  "
-    end
-  end
+-- Use spaces instead of tabs for indentation.
+vim.o.expandtab = true
 
-  return sign .. "%l " .. git .. "%C "
-end
+-- Use four spaces for indentation.
+vim.o.tabstop = 4
+vim.o.shiftwidth = 4
+vim.o.softtabstop = -1
 
--- Custom 'statusline' for Neovim
-vim.g.statusline_orig = vim.o.statusline
-vim.o.statusline = "%{%v:lua.StatusLine()%}"
+-- Show completion menu for all matches, but don't preselect any item.
+vim.o.completeopt = "menu,menuone,noselect"
 
-function _G.StatusLine()
-  local is_active = vim.api.nvim_get_current_win() == tonumber(vim.g.actual_curwin or -1)
+-- Ignore case by default, unless the search contains uppercase letters or \C.
+vim.o.ignorecase = true
+vim.o.smartcase = true
 
-  local get_file_icon = function()
-    local ok, _ = pcall(require, "mini.icons")
-    if not ok then
-      return ""
-    end
+-- Always show the sign column to prevent text from shifting.
+vim.o.signcolumn = "yes"
 
-    local icon, icon_hl, is_default = MiniIcons.get("file", vim.fn.expand "%:t")
-    local hl = is_active and "%%#" .. icon_hl .. "#" or ""
-    return is_default and "" or hl .. icon .. "  %%##"
-  end
+-- Keep some surrounding context visible while scrolling.
+vim.o.scrolloff = 6
 
-  local get_git_branch = function()
-    local ok, _ = pcall(require, "gitsigns")
-    if not ok then
-      return ""
-    end
+-- Save undo history across editing sessions.
+vim.o.undofile = true
 
-    local head = vim.b.gitsigns_head
-    local status = is_active and vim.b.gitsigns_status or ""
-    return head and "󰘬 " .. head .. (status and " " .. status or "") or ""
-  end
+-- }}}1 // Options
 
-  local statusline = vim.g.statusline_orig
-  statusline = statusline:gsub("%%f", " " .. get_file_icon() .. "%%f", 1)
-  statusline = statusline:gsub("%%=", get_git_branch() .. "%%=", 1)
-  return statusline
-end
-
--- [[ Functions ]] ============================================================
-
-local function open_lazygit()
-  vim.cmd "tabedit"
-  vim.cmd "setlocal nonumber signcolumn=no statuscolumn="
-
-  vim.fn.jobstart({
-    "lazygit",
-    "--git-dir=" .. vim.fn.trim(vim.fn.system "git rev-parse --git-dir"),
-    "--work-tree=" .. vim.fn.getcwd(),
-  }, {
-    term = true,
-    on_exit = function()
-      vim.schedule(function()
-        if vim.api.nvim_tabpage_is_valid(0) then
-          vim.cmd "tabclose"
-        end
-      end)
-    end,
-  })
-
-  vim.cmd "startinsert"
-end
-
-local function toggle_qf()
-  vim.cmd(vim.fn.getqflist({ winid = true }).winid ~= 0 and "cclose" or "copen")
-end
-
--- [[ Autocommands ]] =========================================================
+-- Autocommands ========================================================== {{{1
 
 vim.api.nvim_create_autocmd("TextYankPost", {
-  desc = "Highlight yanked text briefly",
-  callback = function()
-    vim.hl.on_yank()
-  end,
+    desc = "Briefly highlight yanked text",
+    callback = function()
+        vim.hl.on_yank()
+    end,
 })
 
 vim.api.nvim_create_autocmd("CursorMoved", {
-  desc = "Clear search highlight when cursor moves off the current match",
-  callback = function()
-    if vim.v.hlsearch == 1 and vim.fn.searchcount().exact_match == 0 then
-      vim.schedule(function()
-        vim.cmd.nohlsearch()
-      end)
-    end
-  end,
-})
-
-vim.api.nvim_create_autocmd("LspProgress", {
-  desc = "Display LSP progress lifecycle messages",
-  callback = function(ev)
-    local value = ev.data.params.value
-    vim.api.nvim_echo({ { value.message or "done" } }, false, {
-      id = "lsp." .. ev.data.client_id,
-      kind = "progress",
-      source = "vim.lsp",
-      title = value.title,
-      status = value.kind ~= "end" and "running" or "success",
-      percent = value.percentage,
-    })
-  end,
+    desc = "Clear search highlight when cursor moves off the current match",
+    callback = function()
+        if vim.v.hlsearch == 1 and vim.fn.searchcount().exact_match == 0 then
+            vim.schedule(function()
+                vim.cmd.nohlsearch()
+            end)
+        end
+    end,
 })
 
 vim.api.nvim_create_autocmd("TermOpen", {
-  desc = "Enter insert mode when a terminal job is starting",
-  callback = function()
-    if vim.opt.buftype:get() == "terminal" then
-      vim.cmd ":startinsert"
-    end
-  end,
+    desc = "Automatically enter insert mode in terminal buffers",
+    callback = function()
+        vim.cmd ":startinsert"
+    end,
 })
 
--- [[ Keymaps ]] ==============================================================
+-- }}}1 // Autocommands
 
-local keymap_set = function(value)
-  local lhs, rhs, desc = value[1], value[2], value[3]
-  local mode = value.mode or "n"
-  local opts = {}
+-- Keymaps =============================================================== {{{1
 
-  if type(desc) == "string" then
-    opts.desc = desc
-  end
+-- Move by display lines when no count is provided.
+vim.keymap.set({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+vim.keymap.set({ "n", "x" }, "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 
-  for k, v in pairs(value) do
-    if type(k) ~= "number" and k ~= "mode" then
-      opts[k] = v
-    end
-  end
+-- Keep the cursor in place when joining lines.
+vim.keymap.set("n", "J", "mzJ`z")
 
-  vim.keymap.set(mode, lhs, rhs, opts)
-end
+-- Move to the first non-blank character or end of the line.
+vim.keymap.set({ "n", "v" }, "L", "$")
+vim.keymap.set({ "n", "v" }, "H", "^")
 
-local keys = {
-  { "<C-c>", "<Esc>", mode = { "i", "n", "v" }, noremap = true, silent = true },
+-- Yank text into the system clipboard.
+vim.keymap.set({ "n", "v" }, "<Leader>y", [["+y]])
+vim.keymap.set("n", "<Leader>Y", [["+Y]])
 
-  { "L", "$", "Jump to end of line", mode = { "n", "v" } },
-  { "H", "^", "Jump to beginning of line", mode = { "n", "v" } },
+-- Paste without replacing the contents of the unnamed register.
+vim.keymap.set("x", "<Leader>p", [["_dP]])
 
-  { "\\w", "<Cmd>set wrap!<CR>", "Toggle line wrap" },
+-- Keep the cursor line centered while navigating.
+vim.keymap.set("n", "<C-u>", "<C-u>zz")
+vim.keymap.set("n", "<C-d>", "<C-d>zz")
+vim.keymap.set("n", "n", "nzzzv")
+vim.keymap.set("n", "N", "Nzzzv")
 
-  { "<Leader>y", [["+y]], "Yank text into system clipboard", mode = { "n", "v" } },
-  { "<Leader>Y", [["+Y]], "Yank current line into system clipboard" },
+-- }}}1 // Keymaps
 
-  { "<Leader>p", [["_dP]], "Paste without overwriting register", mode = "x" },
+-- Plugins =============================================================== {{{1
 
-  { "<C-u>", "<C-u>zz", "Scroll up and center cursor" },
-  { "<C-d>", "<C-d>zz", "Scroll down and center cursor" },
+-- Catppuccin ------------------------------------------------------------ {{{2
 
-  { "<Leader>w", "<Cmd>update<CR>", "Write the current buffer" },
-  { "<Leader>q", "<Cmd>quit<CR>", "Quit the current file" },
-  { "<Leader>Q", "<Cmd>wqa<CR>", "Write all buffers and quit" },
-
-  { "<C-1>", "<Cmd>tabnext1<CR>", mode = { "n", "t" } },
-  { "<C-2>", "<Cmd>tabnext2<CR>", mode = { "n", "t" } },
-  { "<C-3>", "<Cmd>tabnext3<CR>", mode = { "n", "t" } },
-  { "<C-4>", "<Cmd>tabnext4<CR>", mode = { "n", "t" } },
-  { "<C-5>", "<Cmd>tabnext5<CR>", mode = { "n", "t" } },
-  { "<C-6>", "<Cmd>tabnext6<CR>", mode = { "n", "t" } },
-  { "<C-7>", "<Cmd>tabnext7<CR>", mode = { "n", "t" } },
-  { "<C-8>", "<Cmd>tabnext8<CR>", mode = { "n", "t" } },
-  { "<C-9>", "<Cmd>tabnext9<CR>", mode = { "n", "t" } },
-
-  { "<Leader>tt", "<Cmd>tab term<CR>", "Open terminal in new tab" },
-  { "<Leader>tv", "<Cmd>vert term<CR>", "Open terminal in vertical split" },
-
-  { "<C-]>", [[<C-\><C-n>]], mode = { "t" } },
-  { "<C-w>", [[<C-\><C-n><C-w>]], mode = { "t" }, noremap = true },
-
-  { "<C-q>", toggle_qf, "Toggle the quickfix list", silent = true },
-  { "<M-n>", "<Cmd>cnext<CR>zz", "Display the next item in the quickfix list" },
-  { "<M-p>", "<Cmd>cprev<CR>zz", "Display the previous item in the quickfix list" },
-
-  { "<Leader>a", "<Cmd>edit #<CR>", "Open the alternate file" },
-
-  { "<C-f>", "<Cmd>Open .<CR>", "Open the current working directory with the system default handler" },
-
-  { "<Leader>ld", "<Cmd>lua vim.diagnostic.setqflist()<CR>", "Add all diagnostics to the quickfix list" },
-  { "]d", "<Cmd>lua vim.diagnostic.jump({ count = 1, float = true })<CR>", "Jump to the next diagnostic" },
-  { "[d", "<Cmd>lua vim.diagnostic.jump({ count = -1, float = true })<CR>", "Jump to the previous diagnostic" },
-
-  { "j", "v:count == 0 ? 'gj' : 'j'", mode = { "n", "x" }, expr = true, silent = true },
-  { "k", "v:count == 0 ? 'gk' : 'k'", mode = { "n", "x" }, expr = true, silent = true },
-
-  { "-", "<Cmd>Oil<CR>", "Open parent directory with Oil" },
-  { "_", "<Cmd>Oil .<CR>", "Open the current working directory with Oil" },
-
-  { "s", "<Plug>(leap)", mode = { "n", "x", "o" } },
-  { "S", "<Plug>(leap-from-window)" },
-
-  { "<Leader>sh", "<Cmd>Pick help<CR>", "Search help tags" },
-  { "<Leader>sk", "<Cmd>Pick keymaps<CR>", "Search keymaps" },
-  { "<Leader>sf", "<Cmd>Pick files<CR>", "Search files" },
-  { "<Leader>sg", "<Cmd>Pick grep_live<CR>", "Search patterns matches with live feedback" },
-  { "<Leader>s.", "<Cmd>Pick oldfiles<CR>", "Search recent files" },
-  { "<Leader><Leader>", "<Cmd>Pick buffers<CR>", "Search open buffers" },
-
-  { "<Leader>hi", "<Cmd>Gitsigns preview_hunk_inline<CR>", "Preview inline hunk" },
-  { "<Leader>lh", "<Cmd>Gitsigns setqflist<CR>", "Add all hunks to the quickfix list" },
-  { "\\b", "<Cmd>Gitsigns toggle_current_line_blame<CR>", "Toggle line blame" },
-  { "]h", "<Cmd>Gitsigns nav_hunk next<CR>", "Jump to the next hunk" },
-  { "[h", "<Cmd>Gitsigns nav_hunk prev<CR>", "Jump to the previous hunk" },
-
-  { "<Leader>gg", open_lazygit, silent = true },
-}
-
-for _, key in ipairs(keys) do
-  keymap_set(key)
-end
-
--- [[ Plugins ]] ==============================================================
-
--- catppuccin -----------------------------------------------------------------
 vim.pack.add {
-  { src = "https://github.com/catppuccin/nvim.git", name = "catppuccin" },
+    { src = "https://github.com/catppuccin/nvim", name = "catppuccin" },
 }
 
 require("catppuccin").setup {
-  lsp_styles = {
-    underlines = {
-      errors = { "undercurl" },
-      hints = { "undercurl" },
-      warnings = { "undercurl" },
-      information = { "undercurl" },
-    },
-  },
-  custom_highlights = function(colors)
-    local darken = require("catppuccin.utils.colors").darken
-
-    return {
-      CursorLine = { bg = colors.none },
-      Folded = { bg = darken(colors.sky, 0.14, colors.base) },
-      IblIndent = { fg = colors.surface1 },
-      IblScope = { fg = colors.surface2 },
-      MiniCursorword = { bg = colors.surface0, style = {} },
-      MiniCursorwordCurrent = { link = "MiniCursorword" },
-      UfoFoldedEllipsis = { fg = colors.sky, bg = colors.none },
-      Visual = { bg = colors.surface1, style = {} },
-      ColorColumn = { bg = darken(colors.base, 0.94) },
-    }
-  end,
+    custom_highlights = function(colors)
+        return {
+            MiniCursorword = { bg = colors.crust, style = {} },
+            MiniCursorwordCurrent = { link = "MiniCursorword" },
+            Visual = { bg = colors.surface0, style = {} },
+        }
+    end,
 }
 
-vim.cmd.colorscheme "catppuccin-frappe"
+vim.cmd.colorscheme "catppuccin"
 
--- nvim-treesitter ------------------------------------------------------------
+-- }}}2 // Catppuccin
+
+-- Indent Blankline ------------------------------------------------------ {{{2
+
 vim.pack.add {
-  { src = "https://github.com/nvim-treesitter/nvim-treesitter.git" },
+    { src = "https://github.com/lukas-reineke/indent-blankline.nvim.git" },
+}
+
+require("ibl").setup {
+    indent = { char = "▏" },
+    scope = { enabled = false },
+}
+
+-- }}}2 // Indent Blankline
+
+-- Treesitter ------------------------------------------------------------ {{{2
+
+vim.pack.add {
+    { src = "https://github.com/nvim-treesitter/nvim-treesitter.git" },
 }
 
 local parsers = {
-  "bash",
-  "dockerfile",
-  "javascript",
-  "json",
-  "lua",
-  "markdown",
-  "markdown_inline",
-  "python",
-  "terraform",
-  "tsx",
-  "typescript",
-  "yaml",
+    "bash",
+    "dockerfile",
+    "json",
+    "lua",
+    "markdown",
+    "markdown_inline",
+    "python",
+    "terraform",
+    "yaml",
 }
 
 require("nvim-treesitter").install(parsers)
 
 vim.api.nvim_create_autocmd("FileType", {
-  callback = function(ev)
-    local _, lang = ev.match, vim.treesitter.language.get_lang(ev.match)
+    callback = function(ev)
+        local _, lang = ev.match, vim.treesitter.language.get_lang(ev.match)
 
-    if not lang or not vim.tbl_contains(parsers, lang) then
-      return
-    end
+        if not lang or not vim.tbl_contains(parsers, lang) then
+            return
+        end
 
-    if pcall(vim.treesitter.start, ev.buf) then
-      vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-    end
-  end,
+        if pcall(vim.treesitter.start, ev.buf) then
+            vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+        end
+    end,
 })
 
--- gitsigns -------------------------------------------------------------------
+-- }}}2 // Treesitter
+
+-- Mini ------------------------------------------------------------------ {{{2
+
 vim.pack.add {
-  { src = "https://github.com/lewis6991/gitsigns.nvim.git" },
-}
-
-require("gitsigns").setup {
-  signs = {
-    add = { text = "▍" },
-    change = { text = "▍" },
-  },
-  signs_staged = {
-    add = { text = "▍" },
-    change = { text = "▍" },
-  },
-  current_line_blame_opts = {
-    delay = 0,
-  },
-}
-
--- nvim-ufo -------------------------------------------------------------------
-vim.pack.add {
-  { src = "https://github.com/kevinhwang91/nvim-ufo.git" },
-  { src = "https://github.com/kevinhwang91/promise-async.git" },
-}
-
-vim.o.foldcolumn = "1"
-vim.o.foldenable = true
-vim.o.foldlevel = 99
-vim.o.foldlevelstart = 99
-
-vim.o.fillchars = "eob: ,fold: ,foldopen:,foldsep: ,foldinner: ,foldclose:"
-
-require("ufo").setup {
-  open_fold_hl_timeout = 0,
-  provider_selector = function()
-    return { "treesitter", "indent" }
-  end,
-}
-
--- leap -----------------------------------------------------------------------
-vim.pack.add {
-  { src = "https://codeberg.org/andyg/leap.nvim.git" },
-}
-
-require("leap").opts.preview = function(ch0, ch1, ch2)
-  return not (ch1:match "%s" or (ch0:match "%a" and ch1:match "%a" and ch2:match "%a"))
-end
-
--- indent-blankline -----------------------------------------------------------
-vim.pack.add {
-  { src = "https://github.com/lukas-reineke/indent-blankline.nvim.git" },
-}
-
-require("ibl").setup {
-  indent = { char = "▏" },
-  scope = { show_start = false },
-}
-
--- mini -----------------------------------------------------------------------
-vim.pack.add {
-  { src = "https://github.com/nvim-mini/mini.nvim" },
+    { src = "https://github.com/nvim-mini/mini.nvim" },
 }
 
 require("mini.ai").setup()
 require("mini.cursorword").setup()
 require("mini.extra").setup()
-require("mini.icons").setup()
 require("mini.move").setup()
-require("mini.pick").setup()
+require("mini.completion").setup()
 
-if _G.MiniPick ~= nil then
-  local default_show = _G.MiniPick.default_show
-  -- Override `default_show` instead of using `source.show` to preserve the
-  -- hide/show behavior of icons using the built-in pickers.
-  _G.MiniPick.default_show = function(buf_id, items, query, opts)
-    default_show(buf_id, items, query, opts)
-    if not (opts and opts.show_icons) then
-      return
-    end
-
-    for row, line in ipairs(vim.api.nvim_buf_get_lines(buf_id, 0, -1, false)) do
-      local col = vim.fn.byteidx(line, 1)
-      vim.api.nvim_buf_set_text(buf_id, row - 1, col, row - 1, col, { " " })
-      vim.api.nvim_buf_set_text(buf_id, row - 1, 0, row - 1, 0, { " " })
-    end
-  end
-end
-
-require("mini.surround").setup {
-  mappings = {
-    add = "gsa", -- Add surrounding in Normal and Visual modes
-    delete = "gsd", -- Delete surrounding
-    find = "gsf", -- Find surrounding (to the right)
-    find_left = "gsF", -- Find surrounding (to the left)
-    highlight = "gsh", -- Highlight surrounding
-    replace = "gsr", -- Replace surrounding
-  },
+require("mini.pick").setup {
+    source = {
+        show = require("mini.pick").default_show,
+    },
 }
 
--- LSP (nvim-lspconfig, mason, etc.) ------------------------------------------
+require("mini.surround").setup {
+    mappings = {
+        add = "gsa",
+        delete = "gsd",
+        find = "gsf",
+        find_left = "gsF",
+        highlight = "gsh",
+        replace = "gsr",
+    },
+}
+
+vim.keymap.set("n", "<Leader>fb", "<Cmd>Pick buffers<CR>")
+vim.keymap.set("n", "<Leader>ff", "<Cmd>Pick files<CR>")
+vim.keymap.set("n", "<Leader>fr", "<Cmd>Pick oldfiles<CR>")
+vim.keymap.set("n", "<Leader>sg", "<Cmd>Pick grep_live<CR>")
+vim.keymap.set("n", "<Leader>sh", "<Cmd>Pick help<CR>")
+
+-- }}}2 // Mini
+
+-- Oil ------------------------------------------------------------------- {{{2
+
 vim.pack.add {
-  { src = "https://github.com/neovim/nvim-lspconfig.git" },
-  { src = "https://github.com/mason-org/mason.nvim.git" },
-  { src = "https://github.com/mason-org/mason-lspconfig.nvim.git" },
+    { src = "https://github.com/stevearc/oil.nvim.git" },
+}
+
+require("oil").setup {
+    columns = {
+        { "permissions", align = "left" },
+        { "size", align = "right" },
+        { "mtime", align = "left" },
+    },
+    view_options = {
+        sort = {
+            { "mtime", "desc" },
+        },
+    },
+}
+
+vim.keymap.set("n", "-", "<Cmd>Oil<CR>")
+vim.keymap.set("n", "_", "<Cmd>Oil .<CR>")
+
+-- }}}2 // Oil
+
+-- Leap ------------------------------------------------------------------ {{{2
+
+vim.pack.add {
+    { src = "https://codeberg.org/andyg/leap.nvim.git" },
+}
+
+require("leap").opts.preview = function(ch0, ch1, ch2)
+    return not (ch1:match "%s" or (ch0:match "%a" and ch1:match "%a" and ch2:match "%a"))
+end
+
+vim.keymap.set({ "n", "x", "o" }, "s", "<Plug>(leap)")
+vim.keymap.set("n", "S", "<Plug>(leap-from-window)")
+
+-- }}}2 // Leap
+
+-- Mason ----------------------------------------------------------------- {{{2
+
+vim.pack.add {
+    { src = "https://github.com/neovim/nvim-lspconfig.git" },
+    { src = "https://github.com/mason-org/mason.nvim.git" },
+    { src = "https://github.com/mason-org/mason-lspconfig.nvim.git" },
 }
 
 local servers = {
-  basedpyright = {},
-  biome = {},
-  clangd = {},
-  lua_ls = {
-    settings = {
-      Lua = {
-        runtime = { version = "LuaJIT" },
-        workspace = {
-          checkThirdParty = false,
-          library = {
-            vim.env.VIMRUNTIME,
-          },
+    lua_ls = {
+        settings = {
+            Lua = {
+                runtime = { version = "LuaJIT" },
+                workspace = {
+                    checkThirdParty = false,
+                    library = {
+                        vim.env.VIMRUNTIME,
+                    },
+                },
+                telemetry = { enabled = false },
+            },
         },
-        telemetry = { enabled = false },
-      },
     },
-  },
-  oxlint = {},
-  ruff = {},
-  tsgo = {},
+    ty = {},
 }
 
--- Merge extra LSP settings with the defaults from `nvim-lspconfig`, etc.
+-- Merge extra LSP settings with defaults from nvim-lspconfig.
 for name, config in pairs(servers) do
-  vim.lsp.config(name, config)
+    vim.lsp.config(name, config)
 end
 
 require("mason").setup()
 require("mason-lspconfig").setup {
-  ensure_installed = vim.tbl_keys(servers),
+    ensure_installed = vim.tbl_keys(servers),
 }
 
--- oil ------------------------------------------------------------------------
-vim.pack.add {
-  { src = "https://github.com/stevearc/oil.nvim.git" },
-}
+-- }}}2 // Mason
 
-require("oil").setup {
-  columns = {
-    "permissions",
-    "size",
-    "mtime",
-    "icon",
-  },
-  view_options = {
-    sort = {
-      { "mtime", "desc" },
-    },
-  },
-}
+-- }}}1 // Plugins
 
--- conform --------------------------------------------------------------------
-vim.pack.add {
-  { src = "https://github.com/stevearc/conform.nvim.git" },
-}
-
-require("conform").setup {
-  format_on_save = {
-    timeout_ms = 500,
-    lsp_format = "fallback",
-  },
-  formatters_by_ft = {
-    c = { "clang-format" },
-    cpp = { "clang-format" },
-    javascript = { "oxfmt", "biome", "prettierd", stop_after_first = true },
-    typescript = { "oxfmt", "biome", "prettierd", stop_after_first = true },
-    typescriptreact = { "oxfmt", "biome", "prettierd", stop_after_first = true },
-    json = { "oxfmt", "jq", stop_after_first = true },
-    jsonc = { "oxfmt", "jq", stop_after_first = true },
-    lua = { "stylua" },
-    sh = { "shfmt" },
-  },
-}
-
--- blink.cmp ------------------------------------------------------------------
-vim.pack.add {
-  { src = "https://github.com/saghen/blink.cmp.git", version = "v1.10.2" },
-}
-
-require("blink.cmp").setup {
-  keymap = { preset = "enter" },
-  appearance = { nerd_font_variant = "normal" },
-  completion = {
-    documentation = { auto_show = true },
-    list = { selection = { preselect = false, auto_insert = true } },
-  },
-  sources = { default = { "lsp", "path", "snippets", "buffer" } },
-  fuzzy = { implementation = "prefer_rust_with_warning" },
-}
+-- vim: foldmethod=marker foldlevel=0
