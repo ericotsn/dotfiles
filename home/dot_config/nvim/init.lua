@@ -31,9 +31,9 @@ vim.o.splitright = true
 -- Use spaces instead of tabs for indentation.
 vim.o.expandtab = true
 
--- Use four spaces for indentation.
-vim.o.tabstop = 4
-vim.o.shiftwidth = 4
+-- Use two spaces for indentation.
+vim.o.tabstop = 2
+vim.o.shiftwidth = 2
 vim.o.softtabstop = -1
 
 -- Show completion menu for all matches, but don't preselect any item.
