@@ -2,18 +2,18 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
 if vim.g.neovide then
-    vim.o.guifont = "PragmataPro Mono:h18"
-    vim.g.neovide_input_macos_option_key_is_meta = "only_left"
+  vim.o.guifont = "PragmataPro Mono:h18"
+  vim.g.neovide_input_macos_option_key_is_meta = "only_left"
 
-    vim.keymap.set({ "n", "i", "v" }, "<D-v>", function()
-        vim.api.nvim_paste(vim.fn.getreg "+", true, -1)
-    end)
+  vim.keymap.set({ "n", "i", "v" }, "<D-v>", function()
+    vim.api.nvim_paste(vim.fn.getreg "+", true, -1)
+  end)
 end
 
 -- Options =============================================================== {{{1
 
 vim.diagnostic.config {
-    virtual_text = { current_line = true },
+  virtual_text = { current_line = true },
 }
 
 -- Show a live preview of substitutions in a separate split while typing.
@@ -57,28 +57,28 @@ vim.o.undofile = true
 -- Autocommands ========================================================== {{{1
 
 vim.api.nvim_create_autocmd("TextYankPost", {
-    desc = "Briefly highlight yanked text",
-    callback = function()
-        vim.hl.on_yank()
-    end,
+  desc = "Briefly highlight yanked text",
+  callback = function()
+    vim.hl.on_yank()
+  end,
 })
 
 vim.api.nvim_create_autocmd("CursorMoved", {
-    desc = "Clear search highlight when cursor moves off the current match",
-    callback = function()
-        if vim.v.hlsearch == 1 and vim.fn.searchcount().exact_match == 0 then
-            vim.schedule(function()
-                vim.cmd.nohlsearch()
-            end)
-        end
-    end,
+  desc = "Clear search highlight when cursor moves off the current match",
+  callback = function()
+    if vim.v.hlsearch == 1 and vim.fn.searchcount().exact_match == 0 then
+      vim.schedule(function()
+        vim.cmd.nohlsearch()
+      end)
+    end
+  end,
 })
 
 vim.api.nvim_create_autocmd("TermOpen", {
-    desc = "Automatically enter insert mode in terminal buffers",
-    callback = function()
-        vim.cmd ":startinsert"
-    end,
+  desc = "Automatically enter insert mode in terminal buffers",
+  callback = function()
+    vim.cmd ":startinsert"
+  end,
 })
 
 -- }}}1 // Autocommands
@@ -116,17 +116,17 @@ vim.keymap.set("n", "N", "Nzzzv")
 -- Catppuccin ------------------------------------------------------------ {{{2
 
 vim.pack.add {
-    { src = "https://github.com/catppuccin/nvim", name = "catppuccin" },
+  { src = "https://github.com/catppuccin/nvim", name = "catppuccin" },
 }
 
 require("catppuccin").setup {
-    custom_highlights = function(colors)
-        return {
-            MiniCursorword = { bg = colors.crust, style = {} },
-            MiniCursorwordCurrent = { link = "MiniCursorword" },
-            Visual = { bg = colors.surface0, style = {} },
-        }
-    end,
+  custom_highlights = function(colors)
+    return {
+      MiniCursorword = { bg = colors.crust, style = {} },
+      MiniCursorwordCurrent = { link = "MiniCursorword" },
+      Visual = { bg = colors.surface0, style = {} },
+    }
+  end,
 }
 
 vim.cmd.colorscheme "catppuccin"
@@ -136,12 +136,12 @@ vim.cmd.colorscheme "catppuccin"
 -- Indent Blankline ------------------------------------------------------ {{{2
 
 vim.pack.add {
-    { src = "https://github.com/lukas-reineke/indent-blankline.nvim.git" },
+  { src = "https://github.com/lukas-reineke/indent-blankline.nvim.git" },
 }
 
 require("ibl").setup {
-    indent = { char = "▏" },
-    scope = { enabled = false },
+  indent = { char = "▏" },
+  scope = { enabled = false },
 }
 
 -- }}}2 // Indent Blankline
@@ -149,35 +149,35 @@ require("ibl").setup {
 -- Treesitter ------------------------------------------------------------ {{{2
 
 vim.pack.add {
-    { src = "https://github.com/nvim-treesitter/nvim-treesitter.git" },
+  { src = "https://github.com/nvim-treesitter/nvim-treesitter.git" },
 }
 
 local parsers = {
-    "bash",
-    "dockerfile",
-    "json",
-    "lua",
-    "markdown",
-    "markdown_inline",
-    "python",
-    "terraform",
-    "yaml",
+  "bash",
+  "dockerfile",
+  "json",
+  "lua",
+  "markdown",
+  "markdown_inline",
+  "python",
+  "terraform",
+  "yaml",
 }
 
 require("nvim-treesitter").install(parsers)
 
 vim.api.nvim_create_autocmd("FileType", {
-    callback = function(ev)
-        local _, lang = ev.match, vim.treesitter.language.get_lang(ev.match)
+  callback = function(ev)
+    local _, lang = ev.match, vim.treesitter.language.get_lang(ev.match)
 
-        if not lang or not vim.tbl_contains(parsers, lang) then
-            return
-        end
+    if not lang or not vim.tbl_contains(parsers, lang) then
+      return
+    end
 
-        if pcall(vim.treesitter.start, ev.buf) then
-            vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-        end
-    end,
+    if pcall(vim.treesitter.start, ev.buf) then
+      vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+    end
+  end,
 })
 
 -- }}}2 // Treesitter
@@ -185,7 +185,7 @@ vim.api.nvim_create_autocmd("FileType", {
 -- Mini ------------------------------------------------------------------ {{{2
 
 vim.pack.add {
-    { src = "https://github.com/nvim-mini/mini.nvim" },
+  { src = "https://github.com/nvim-mini/mini.nvim" },
 }
 
 require("mini.ai").setup()
@@ -195,20 +195,20 @@ require("mini.move").setup()
 require("mini.completion").setup()
 
 require("mini.pick").setup {
-    source = {
-        show = require("mini.pick").default_show,
-    },
+  source = {
+    show = require("mini.pick").default_show,
+  },
 }
 
 require("mini.surround").setup {
-    mappings = {
-        add = "gsa",
-        delete = "gsd",
-        find = "gsf",
-        find_left = "gsF",
-        highlight = "gsh",
-        replace = "gsr",
-    },
+  mappings = {
+    add = "gsa",
+    delete = "gsd",
+    find = "gsf",
+    find_left = "gsF",
+    highlight = "gsh",
+    replace = "gsr",
+  },
 }
 
 vim.keymap.set("n", "<Leader>fb", "<Cmd>Pick buffers<CR>")
@@ -222,20 +222,20 @@ vim.keymap.set("n", "<Leader>sh", "<Cmd>Pick help<CR>")
 -- Oil ------------------------------------------------------------------- {{{2
 
 vim.pack.add {
-    { src = "https://github.com/stevearc/oil.nvim.git" },
+  { src = "https://github.com/stevearc/oil.nvim.git" },
 }
 
 require("oil").setup {
-    columns = {
-        { "permissions", align = "left" },
-        { "size", align = "right" },
-        { "mtime", align = "left" },
+  columns = {
+    { "permissions", align = "left" },
+    { "size", align = "right" },
+    { "mtime", align = "left" },
+  },
+  view_options = {
+    sort = {
+      { "mtime", "desc" },
     },
-    view_options = {
-        sort = {
-            { "mtime", "desc" },
-        },
-    },
+  },
 }
 
 vim.keymap.set("n", "-", "<Cmd>Oil<CR>")
@@ -246,11 +246,11 @@ vim.keymap.set("n", "_", "<Cmd>Oil .<CR>")
 -- Leap ------------------------------------------------------------------ {{{2
 
 vim.pack.add {
-    { src = "https://codeberg.org/andyg/leap.nvim.git" },
+  { src = "https://codeberg.org/andyg/leap.nvim.git" },
 }
 
 require("leap").opts.preview = function(ch0, ch1, ch2)
-    return not (ch1:match "%s" or (ch0:match "%a" and ch1:match "%a" and ch2:match "%a"))
+  return not (ch1:match "%s" or (ch0:match "%a" and ch1:match "%a" and ch2:match "%a"))
 end
 
 vim.keymap.set({ "n", "x", "o" }, "s", "<Plug>(leap)")
@@ -261,37 +261,37 @@ vim.keymap.set("n", "S", "<Plug>(leap-from-window)")
 -- Mason ----------------------------------------------------------------- {{{2
 
 vim.pack.add {
-    { src = "https://github.com/neovim/nvim-lspconfig.git" },
-    { src = "https://github.com/mason-org/mason.nvim.git" },
-    { src = "https://github.com/mason-org/mason-lspconfig.nvim.git" },
+  { src = "https://github.com/neovim/nvim-lspconfig.git" },
+  { src = "https://github.com/mason-org/mason.nvim.git" },
+  { src = "https://github.com/mason-org/mason-lspconfig.nvim.git" },
 }
 
 local servers = {
-    lua_ls = {
-        settings = {
-            Lua = {
-                runtime = { version = "LuaJIT" },
-                workspace = {
-                    checkThirdParty = false,
-                    library = {
-                        vim.env.VIMRUNTIME,
-                    },
-                },
-                telemetry = { enabled = false },
-            },
+  lua_ls = {
+    settings = {
+      Lua = {
+        runtime = { version = "LuaJIT" },
+        workspace = {
+          checkThirdParty = false,
+          library = {
+            vim.env.VIMRUNTIME,
+          },
         },
+        telemetry = { enabled = false },
+      },
     },
-    ty = {},
+  },
+  ty = {},
 }
 
 -- Merge extra LSP settings with defaults from nvim-lspconfig.
 for name, config in pairs(servers) do
-    vim.lsp.config(name, config)
+  vim.lsp.config(name, config)
 end
 
 require("mason").setup()
 require("mason-lspconfig").setup {
-    ensure_installed = vim.tbl_keys(servers),
+  ensure_installed = vim.tbl_keys(servers),
 }
 
 -- }}}2 // Mason
