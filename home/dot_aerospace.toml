@@ -10,15 +10,15 @@ run = [ "layout floating" ]
 alt-slash = "layout tiles horizontal vertical"
 alt-comma = "layout accordion horizontal vertical"
 
-alt-shift-h = "focus left"
+alt-shift-j = "focus left"
 alt-shift-l = "focus right"
-alt-shift-j = "focus down"
-alt-shift-k = "focus up"
+alt-shift-k = "focus down"
+alt-shift-i = "focus up"
 
-alt-shift-ctrl-h = "move left"
+alt-shift-ctrl-j = "move left"
 alt-shift-ctrl-l = "move right"
-alt-shift-ctrl-j = "move down"
-alt-shift-ctrl-k = "move up"
+alt-shift-ctrl-k = "move down"
+alt-shift-ctrl-i = "move up"
 
 alt-minus = "resize smart -50"
 alt-equal = "resize smart +50"
