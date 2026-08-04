@@ -4,4 +4,4 @@ onboarding = false
 name = "catppuccin"
 auto_switch = true
 light_name = "catppuccin-latte"
-dark_name = "catppuccin-macchiato"
+dark_name = "catppuccin-mocha"

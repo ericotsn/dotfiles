@@ -4,5 +4,5 @@ font-size = 18.0
 macos-option-as-alt = left
 macos-titlebar-proxy-icon = hidden
 mouse-hide-while-typing = true
-theme = dark:Catppuccin Macchiato,light:Catppuccin Latte
+theme = dark:Catppuccin Mocha,light:Catppuccin Latte
 window-padding-balance = true
