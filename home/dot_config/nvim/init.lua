@@ -93,9 +93,7 @@ local function open_lazygit()
     on_exit = function()
       vim.schedule(function()
         if vim.api.nvim_tabpage_is_valid(lazygit_tab) then
-          vim.api.nvim_tabpage_call(lazygit_tab, function()
-            vim.cmd "tabclose"
-          end)
+          vim.cmd("tabclose " .. vim.api.nvim_tabpage_get_number(lazygit_tab))
         end
       end)
     end,
