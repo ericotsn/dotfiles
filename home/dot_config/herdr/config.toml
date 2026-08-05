@@ -5,3 +5,7 @@ name = "catppuccin"
 auto_switch = true
 light_name = "catppuccin-latte"
 dark_name = "catppuccin-mocha"
+
+[keys]
+navigate_workspace_up = "k"
+navigate_workspace_down = "j"
