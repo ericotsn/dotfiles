@@ -3,6 +3,10 @@
 
 [core]
   fsmonitor = true
+{{- if and (eq .chezmoi.os "linux") (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
+  sshCommand = ssh.exe
+{{- end }}
+
 
 [diff]
   tool = nvim
@@ -18,7 +22,11 @@
   format = ssh
 
 [gpg "ssh"]
+{{- if and (eq .chezmoi.os "linux") (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
+  program = "/mnt/c/Users/erico/AppData/Local/Microsoft/WindowsApps/op-ssh-sign-wsl.exe"
+{{- else }}
   program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+{{- end }}
 
 [init]
   defaultBranch = main
