@@ -81,6 +81,7 @@ local function open_lazygit()
 
   vim.cmd "tabnew"
   local lazygit_tab = vim.api.nvim_get_current_tabpage()
+  local lazygit_buf = vim.api.nvim_get_current_buf()
 
   vim.opt_local.number = false
   vim.opt_local.relativenumber = false
@@ -94,6 +95,9 @@ local function open_lazygit()
       vim.schedule(function()
         if vim.api.nvim_tabpage_is_valid(lazygit_tab) then
           vim.cmd("tabclose " .. vim.api.nvim_tabpage_get_number(lazygit_tab))
+        end
+        if vim.api.nvim_buf_is_valid(lazygit_buf) then
+          vim.api.nvim_buf_delete(lazygit_buf, { force = true })
         end
       end)
     end,
