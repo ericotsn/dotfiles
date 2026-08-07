@@ -207,10 +207,10 @@ vim.pack.add {
 }
 
 require("mini.ai").setup()
+require("mini.completion").setup()
 require("mini.cursorword").setup()
 require("mini.extra").setup()
 require("mini.move").setup()
-require("mini.completion").setup()
 
 require("mini.pick").setup {
   source = {
