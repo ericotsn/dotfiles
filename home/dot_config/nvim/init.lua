@@ -139,6 +139,9 @@ vim.keymap.set("n", "<C-d>", "<C-d>zz")
 vim.keymap.set("n", "n", "nzzzv")
 vim.keymap.set("n", "N", "Nzzzv")
 
+vim.keymap.set("n", "<C-n>", "<cmd>cnext<CR>zz")
+vim.keymap.set("n", "<C-p>", "<cmd>cprev<CR>zz")
+
 -- }}}1 // Keymaps
 
 -- Plugins =============================================================== {{{1
