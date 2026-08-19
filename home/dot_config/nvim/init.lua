@@ -7,6 +7,9 @@ vim.diagnostic.config {
   virtual_text = { current_line = true },
 }
 
+-- Highlight the line where the cursor is on.
+vim.o.cursorline = true
+
 -- Show a live preview of substitutions in a separate split while typing.
 vim.o.inccommand = "split"
 
