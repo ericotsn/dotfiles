@@ -205,8 +205,6 @@ vim.pack.add {
 
 require("mini.ai").setup()
 require("mini.completion").setup()
-require("mini.cursorword").setup()
-require("mini.extra").setup()
 require("mini.move").setup()
 
 require("mini.pick").setup {
@@ -228,7 +226,6 @@ require("mini.surround").setup {
 
 vim.keymap.set("n", "<Leader>fb", "<Cmd>Pick buffers<CR>")
 vim.keymap.set("n", "<Leader>ff", "<Cmd>Pick files<CR>")
-vim.keymap.set("n", "<Leader>fr", "<Cmd>Pick oldfiles<CR>")
 vim.keymap.set("n", "<Leader>sg", "<Cmd>Pick grep_live<CR>")
 vim.keymap.set("n", "<Leader>sh", "<Cmd>Pick help<CR>")
 
