@@ -180,25 +180,12 @@ vim.pack.add {
   { src = "https://github.com/nvim-treesitter/nvim-treesitter.git" },
 }
 
-local parsers = {
-  "bash",
-  "dockerfile",
-  "json",
-  "lua",
-  "markdown",
-  "markdown_inline",
-  "python",
-  "terraform",
-  "yaml",
-}
-
-require("nvim-treesitter").install(parsers)
-
 vim.api.nvim_create_autocmd("FileType", {
   callback = function(ev)
     local _, lang = ev.match, vim.treesitter.language.get_lang(ev.match)
+    local installed = require("nvim-treesitter").get_installed "parsers"
 
-    if not lang or not vim.tbl_contains(parsers, lang) then
+    if not lang or not vim.tbl_contains(installed, lang) then
       return
     end
 
@@ -277,10 +264,6 @@ vim.pack.add {
   { src = "https://codeberg.org/andyg/leap.nvim.git" },
 }
 
-require("leap").opts.preview = function(ch0, ch1, ch2)
-  return not (ch1:match "%s" or (ch0:match "%a" and ch1:match "%a" and ch2:match "%a"))
-end
-
 vim.keymap.set({ "n", "x", "o" }, "s", "<Plug>(leap)")
 vim.keymap.set("n", "S", "<Plug>(leap-from-window)")
 
@@ -309,7 +292,6 @@ local servers = {
       },
     },
   },
-  ty = {},
 }
 
 -- Merge extra LSP settings with defaults from nvim-lspconfig.
@@ -318,9 +300,7 @@ for name, config in pairs(servers) do
 end
 
 require("mason").setup()
-require("mason-lspconfig").setup {
-  ensure_installed = vim.tbl_keys(servers),
-}
+require("mason-lspconfig").setup()
 
 -- }}}2 // Mason
 
