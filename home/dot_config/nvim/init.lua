@@ -31,7 +31,7 @@ vim.o.shiftwidth = 2
 vim.o.softtabstop = -1
 
 -- Show completion menu for all matches, but don't preselect any item.
-vim.o.completeopt = "menu,menuone,noselect"
+vim.o.completeopt = "menuone,noselect,fuzzy,nosort"
 
 -- Ignore case by default, unless the search contains uppercase letters or \C.
 vim.o.ignorecase = true
@@ -163,9 +163,7 @@ vim.cmd.colorscheme "catppuccin"
 
 -- Indent Blankline ------------------------------------------------------ {{{2
 
-vim.pack.add {
-  { src = "https://github.com/lukas-reineke/indent-blankline.nvim.git" },
-}
+vim.pack.add { "https://github.com/lukas-reineke/indent-blankline.nvim.git" }
 
 require("ibl").setup {
   indent = { char = "▏" },
@@ -176,9 +174,7 @@ require("ibl").setup {
 
 -- Treesitter ------------------------------------------------------------ {{{2
 
-vim.pack.add {
-  { src = "https://github.com/nvim-treesitter/nvim-treesitter.git" },
-}
+vim.pack.add { "https://github.com/nvim-treesitter/nvim-treesitter.git" }
 
 vim.api.nvim_create_autocmd("FileType", {
   callback = function(ev)
@@ -199,19 +195,14 @@ vim.api.nvim_create_autocmd("FileType", {
 
 -- Mini ------------------------------------------------------------------ {{{2
 
-vim.pack.add {
-  { src = "https://github.com/nvim-mini/mini.nvim" },
-}
+vim.pack.add { "https://github.com/nvim-mini/mini.nvim" }
 
 require("mini.ai").setup()
 require("mini.completion").setup()
 require("mini.move").setup()
 
-require("mini.pick").setup {
-  source = {
-    show = require("mini.pick").default_show,
-  },
-}
+local pick = require "mini.pick"
+pick.setup { source = { show = pick.default_show } }
 
 require("mini.surround").setup {
   mappings = {
@@ -233,9 +224,7 @@ vim.keymap.set("n", "<Leader>sh", "<Cmd>Pick help<CR>")
 
 -- Oil ------------------------------------------------------------------- {{{2
 
-vim.pack.add {
-  { src = "https://github.com/stevearc/oil.nvim.git" },
-}
+vim.pack.add { "https://github.com/stevearc/oil.nvim.git" }
 
 require("oil").setup {
   columns = {
@@ -257,9 +246,7 @@ vim.keymap.set("n", "_", "<Cmd>Oil .<CR>")
 
 -- Leap ------------------------------------------------------------------ {{{2
 
-vim.pack.add {
-  { src = "https://codeberg.org/andyg/leap.nvim.git" },
-}
+vim.pack.add { "https://codeberg.org/andyg/leap.nvim.git" }
 
 vim.keymap.set({ "n", "x", "o" }, "s", "<Plug>(leap)")
 vim.keymap.set("n", "S", "<Plug>(leap-from-window)")
@@ -269,9 +256,9 @@ vim.keymap.set("n", "S", "<Plug>(leap-from-window)")
 -- Mason ----------------------------------------------------------------- {{{2
 
 vim.pack.add {
-  { src = "https://github.com/neovim/nvim-lspconfig.git" },
-  { src = "https://github.com/mason-org/mason.nvim.git" },
-  { src = "https://github.com/mason-org/mason-lspconfig.nvim.git" },
+  "https://github.com/neovim/nvim-lspconfig.git",
+  "https://github.com/mason-org/mason.nvim.git",
+  "https://github.com/mason-org/mason-lspconfig.nvim.git",
 }
 
 local servers = {
