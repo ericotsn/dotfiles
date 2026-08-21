@@ -4,11 +4,6 @@
 
 set shell := ["bash", "-c"]
 
-os := os()
-
-install:
-  ./install.sh {{os}}
-
 apply:
   chezmoi apply --source .
 
