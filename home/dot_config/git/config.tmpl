@@ -23,7 +23,7 @@
 
 [gpg "ssh"]
 {{- if and (eq .chezmoi.os "linux") (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
-  program = "/mnt/c/Users/erico/AppData/Local/Microsoft/WindowsApps/op-ssh-sign-wsl.exe"
+  program = "/mnt/c/Users/Eric/AppData/Local/Microsoft/WindowsApps/op-ssh-sign-wsl.exe"
 {{- else }}
   program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
 {{- end }}
