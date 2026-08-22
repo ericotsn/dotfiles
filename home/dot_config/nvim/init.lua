@@ -46,6 +46,9 @@ vim.o.scrolloff = 6
 -- Save undo history across editing sessions.
 vim.o.undofile = true
 
+-- Show a border around popupmenu windows.
+vim.o.pumborder = "single"
+
 -- }}}1 // Options
 
 -- Autocommands ========================================================== {{{1
