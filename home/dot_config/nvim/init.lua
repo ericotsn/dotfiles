@@ -201,8 +201,12 @@ vim.api.nvim_create_autocmd("FileType", {
 vim.pack.add { "https://github.com/nvim-mini/mini.nvim" }
 
 require("mini.ai").setup()
-require("mini.completion").setup()
 require("mini.move").setup()
+
+require("mini.completion").setup({
+  -- Effectively disable signature help.
+  delay = { signature = 10^7 },
+})
 
 local pick = require "mini.pick"
 pick.setup { source = { show = pick.default_show } }
