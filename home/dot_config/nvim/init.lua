@@ -46,8 +46,9 @@ vim.o.scrolloff = 6
 -- Save undo history across editing sessions.
 vim.o.undofile = true
 
--- Show a border around popupmenu windows.
+-- Show a border around floating and popupmenu windows.
 vim.o.pumborder = "single"
+vim.o.winborder = "single"
 
 -- }}}1 // Options
 
@@ -145,8 +146,8 @@ vim.keymap.set("n", "<C-d>", "<C-d>zz")
 vim.keymap.set("n", "n", "nzzzv")
 vim.keymap.set("n", "N", "Nzzzv")
 
-vim.keymap.set("n", "<C-n>", "<cmd>cnext<CR>zz")
-vim.keymap.set("n", "<C-p>", "<cmd>cprev<CR>zz")
+vim.keymap.set("n", "<C-n>", "<Cmd>cnext<CR>zz")
+vim.keymap.set("n", "<C-p>", "<Cmd>cprev<CR>zz")
 
 -- }}}1 // Keymaps
 
@@ -202,14 +203,15 @@ vim.pack.add { "https://github.com/nvim-mini/mini.nvim" }
 
 require("mini.ai").setup()
 require("mini.move").setup()
+require("mini.pick").setup()
+
+require("mini.icons").setup()
+MiniIcons.tweak_lsp_kind()
 
 require("mini.completion").setup({
   -- Effectively disable signature help.
   delay = { signature = 10^7 },
 })
-
-local pick = require "mini.pick"
-pick.setup { source = { show = pick.default_show } }
 
 require("mini.surround").setup {
   mappings = {
@@ -222,8 +224,7 @@ require("mini.surround").setup {
   },
 }
 
-vim.keymap.set("n", "<Leader>fb", "<Cmd>Pick buffers<CR>")
-vim.keymap.set("n", "<Leader>ff", "<Cmd>Pick files<CR>")
+vim.keymap.set("n", "<Leader><Space>", "<Cmd>Pick files<CR>")
 vim.keymap.set("n", "<Leader>sg", "<Cmd>Pick grep_live<CR>")
 vim.keymap.set("n", "<Leader>sh", "<Cmd>Pick help<CR>")
 
