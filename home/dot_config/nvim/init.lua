@@ -322,6 +322,18 @@ vim.keymap.set({ "n", "v" }, "<Leader>F", "<Cmd>Format<CR>")
 
 -- }}}2 // Conform
 
+-- Autopairs ------------------------------------------------------------- {{{2
+
+vim.pack.add {
+  "https://github.com/windwp/nvim-autopairs",
+  "https://github.com/windwp/nvim-ts-autotag",
+}
+
+require("nvim-autopairs").setup()
+require("nvim-ts-autotag").setup()
+
+-- }}}2 // Autopairs
+
 -- }}}1 // Plugins
 
 -- vim: foldmethod=marker foldlevel=0
