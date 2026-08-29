@@ -7,7 +7,7 @@ light_name = "catppuccin-latte"
 dark_name = "catppuccin-mocha"
 
 [keys]
-prefix = "ctrl+semicolon"
+prefix = "ctrl+j"
 navigate_workspace_up = "k"
 navigate_workspace_down = "j"
 
