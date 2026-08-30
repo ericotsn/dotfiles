@@ -242,6 +242,7 @@ require("oil").setup {
     { "permissions", align = "left" },
     { "size", align = "right" },
     { "mtime", align = "left" },
+    { "icon", add_padding = false },
   },
   view_options = {
     sort = {

@@ -12,7 +12,7 @@ function _G.StatusLine()
 
     local icon, icon_hl, is_default = MiniIcons.get("file", vim.fn.expand "%:t")
     local hl = is_active and "%%#" .. icon_hl .. "#" or ""
-    return is_default and "" or hl .. icon .. "  %%##"
+    return is_default and "" or hl .. icon .. " %%##"
   end
 
   local get_git_branch = function()
