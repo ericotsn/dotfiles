@@ -7,6 +7,9 @@ vim.diagnostic.config {
   virtual_text = { current_line = true },
 }
 
+-- Show line numbers.
+vim.o.number = true
+
 -- Highlight the line where the cursor is on.
 vim.o.cursorline = true
 
@@ -333,6 +336,26 @@ require("nvim-autopairs").setup()
 require("nvim-ts-autotag").setup()
 
 -- }}}2 // Autopairs
+
+-- Gitsigns -------------------------------------------------------------- {{{2
+
+vim.pack.add { "https://github.com/lewis6991/gitsigns.nvim" }
+
+require("gitsigns").setup {
+  signs = {
+    add = { text = "▎" },
+    change = { text = "▎" },
+  },
+  signs_staged = {
+    add = { text = "▎" },
+    change = { text = "▎" },
+  },
+  current_line_blame_opts = {
+    delay = 0,
+  },
+}
+
+-- }}}2 // Gitsigns
 
 -- }}}1 // Plugins
 
