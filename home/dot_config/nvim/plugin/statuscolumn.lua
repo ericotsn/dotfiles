@@ -14,6 +14,7 @@ vim.diagnostic.config {
 function _G.StatusColumn()
   local row = vim.v.lnum - 1 -- The extmark API is 0-based
   local buffer = vim.api.nvim_win_get_buf(vim.g.statusline_winid)
+  local numbers = math.max(3, #tostring(vim.api.nvim_buf_line_count(buffer)))
   local marks = vim.api.nvim_buf_get_extmarks(buffer, -1, { row, 0 }, { row, -1 }, { details = true, type = "sign" })
   local sign, git = "  ", " "
 
@@ -30,5 +31,5 @@ function _G.StatusColumn()
     end
   end
 
-  return sign .. "%l " .. git .. "%C "
+  return sign .. string.format("%%%dl ", numbers) .. git .. "%C "
 end
