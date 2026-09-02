@@ -1,6 +1,7 @@
-adjust-cell-height = 4
+adjust-cell-height = 2
 font-family = PragmataPro Liga
-font-size = 16.0
+font-size = 18.0
+font-thicken = true
 macos-option-as-alt = left
 macos-titlebar-proxy-icon = hidden
 mouse-hide-while-typing = true
