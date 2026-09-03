@@ -1,0 +1,71 @@
+gui:
+  showCommandLog: false
+
+{{- if and (eq .chezmoi.os "linux") (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
+  theme:
+    activeBorderColor:
+      - '#89b4fa'
+      - bold
+    inactiveBorderColor:
+      - '#a6adc8'
+    searchingActiveBorderColor:
+      - '#f9e2af'
+    optionsTextColor:
+      - '#89b4fa'
+    selectedLineBgColor:
+      - '#313244'
+    inactiveViewSelectedLineBgColor:
+      - '#6c7086'
+    cherryPickedCommitFgColor:
+      - '#89b4fa'
+    cherryPickedCommitBgColor:
+      - '#45475a'
+    markedBaseCommitFgColor:
+      - '#89b4fa'
+    markedBaseCommitBgColor:
+      - '#f9e2af'
+    unstagedChangesColor:
+      - '#f38ba8'
+    defaultFgColor:
+      - '#cdd6f4'
+
+  authorColors:
+    '*': '#b4befe'
+{{- else }}
+  theme:
+    activeBorderColor:
+      - '#1e66f5'
+      - bold
+    inactiveBorderColor:
+      - '#6c6f85'
+    searchingActiveBorderColor:
+      - '#df8e1d'
+    optionsTextColor:
+      - '#1e66f5'
+    selectedLineBgColor:
+      - '#ccd0da'
+    inactiveViewSelectedLineBgColor:
+      - '#9ca0b0'
+    cherryPickedCommitFgColor:
+      - '#1e66f5'
+    cherryPickedCommitBgColor:
+      - '#bcc0cc'
+    markedBaseCommitFgColor:
+      - '#1e66f5'
+    markedBaseCommitBgColor:
+      - '#df8e1d'
+    unstagedChangesColor:
+      - '#d20f39'
+    defaultFgColor:
+      - '#4c4f69'
+
+  authorColors:
+    '*': '#7287fd'
+{{- end }}
+
+git:
+  log:
+    showGraph: when-maximised
+
+os:
+  editPreset: nvim-remote
