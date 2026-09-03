@@ -1,5 +1,8 @@
 local function open_lazygit()
-  local cwd = vim.fs.dirname(vim.api.nvim_buf_get_name(0)) or vim.fn.getcwd()
+  local cwd = vim.fs.dirname(vim.api.nvim_buf_get_name(0))
+  if not cwd or not vim.uv.fs_stat(cwd) then
+    cwd = vim.fn.getcwd()
+  end
 
   vim.cmd "tabnew"
   local lazygit_tab = vim.api.nvim_get_current_tabpage()
