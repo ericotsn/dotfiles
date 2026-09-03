@@ -2,6 +2,11 @@ gui:
   theme:
     selectedLineBgColor:
       - default
+  showCommandLog: false
 
-  authorColors:
-    'Eric Ottosson': red
+git:
+  log:
+    showGraph: when-maximised
+
+os:
+  editPreset: nvim-remote
