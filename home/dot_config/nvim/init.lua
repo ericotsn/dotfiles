@@ -123,7 +123,17 @@ vim.pack.add {
   { src = "https://github.com/catppuccin/nvim", name = "catppuccin" },
 }
 
-require("catppuccin").setup()
+require("catppuccin").setup {
+  custom_highlights = function(C)
+    local U = require "catppuccin.utils.colors"
+
+    return {
+      MiniCursorword = { bg = U.darken(C.surface1, 0.7, C.base), style = {} },
+      MiniCursorwordCurrent = { link = "MiniCursorword" },
+      Visual = { bg = C.surface1, style = {} },
+    }
+  end,
+}
 
 vim.cmd.colorscheme "catppuccin"
 
@@ -166,6 +176,7 @@ vim.api.nvim_create_autocmd("FileType", {
 vim.pack.add { "https://github.com/nvim-mini/mini.nvim" }
 
 require("mini.ai").setup()
+require("mini.cursorword").setup()
 require("mini.move").setup()
 require("mini.pick").setup()
 
@@ -305,12 +316,12 @@ vim.pack.add { "https://github.com/lewis6991/gitsigns.nvim" }
 
 require("gitsigns").setup {
   signs = {
-    add = { text = "▎" },
-    change = { text = "▎" },
+    add = { text = "🮈" },
+    change = { text = "🮈" },
   },
   signs_staged = {
-    add = { text = "▎" },
-    change = { text = "▎" },
+    add = { text = "🮈" },
+    change = { text = "🮈" },
   },
   current_line_blame_opts = {
     delay = 0,

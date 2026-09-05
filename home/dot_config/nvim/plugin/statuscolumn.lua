@@ -15,8 +15,8 @@ function _G.StatusColumn()
   local row = vim.v.lnum - 1 -- The extmark API is 0-based
   local buffer = vim.api.nvim_win_get_buf(vim.g.statusline_winid)
   local number_width = math.max(3, #tostring(vim.api.nvim_buf_line_count(buffer)))
-  local number = vim.v.virtnum == 0 and string.format("%" .. number_width .. "d ", vim.v.lnum)
-    or string.rep(" ", number_width + 1)
+  local number = vim.v.virtnum == 0 and string.format("%" .. number_width .. "d", vim.v.lnum)
+    or string.rep(" ", number_width)
   local marks = vim.api.nvim_buf_get_extmarks(buffer, -1, { row, 0 }, { row, -1 }, { details = true, type = "sign" })
   local sign, git = "  ", " "
 
@@ -33,5 +33,5 @@ function _G.StatusColumn()
     end
   end
 
-  return sign .. number .. git .. "%C "
+  return sign .. number .. git .. " %C "
 end
