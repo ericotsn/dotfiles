@@ -187,6 +187,7 @@ require("mini.ai").setup()
 require("mini.cursorword").setup()
 require("mini.move").setup()
 require("mini.pick").setup()
+require("mini.sessions").setup()
 
 require("mini.icons").setup {
   extension = {
@@ -214,6 +215,32 @@ require("mini.surround").setup {
 vim.keymap.set("n", "<Leader><Space>", "<Cmd>Pick files<CR>")
 vim.keymap.set("n", "<Leader>sg", "<Cmd>Pick grep_live<CR>")
 vim.keymap.set("n", "<Leader>sh", "<Cmd>Pick help<CR>")
+
+local function create_session()
+  vim.ui.input({ prompt = "Session name: " }, function(name)
+    if name and name ~= "" then
+      MiniSessions.write(name)
+    end
+  end)
+end
+
+local function restore_session()
+  local latest = MiniSessions.get_latest()
+
+  if latest then
+    MiniSessions.read(latest)
+  else
+    vim.notify("No sessions found", vim.log.levels.WARN)
+  end
+end
+
+-- stylua: ignore start
+vim.keymap.set("n", "<Leader>qr", function() MiniSessions.select "read" end)
+vim.keymap.set("n", "<Leader>qw", function() MiniSessions.select "write" end)
+vim.keymap.set("n", "<Leader>qd", function() MiniSessions.select "delete" end)
+vim.keymap.set("n", "<Leader>qn", create_session)
+vim.keymap.set("n", "<Leader>ql", restore_session)
+-- stylua: ignore end
 
 -- }}}2 // Mini
 
