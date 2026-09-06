@@ -124,6 +124,14 @@ vim.pack.add {
 }
 
 require("catppuccin").setup {
+  lsp_styles = {
+    underlines = {
+      errors = { "undercurl" },
+      hints = { "undercurl" },
+      warnings = { "undercurl" },
+      information = { "undercurl" },
+    },
+  },
   custom_highlights = function(C)
     local U = require "catppuccin.utils.colors"
 
@@ -180,7 +188,11 @@ require("mini.cursorword").setup()
 require("mini.move").setup()
 require("mini.pick").setup()
 
-require("mini.icons").setup()
+require("mini.icons").setup {
+  extension = {
+    tmpl = { glyph = "" },
+  },
+}
 MiniIcons.tweak_lsp_kind()
 
 require("mini.completion").setup {
