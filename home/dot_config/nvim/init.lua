@@ -1,6 +1,17 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
+if vim.g.neovide then
+  vim.o.guifont = "PragmataPro Liga:h16"
+  vim.o.linespace = 12
+  vim.g.neovide_input_macos_option_key_is_meta = "only_left"
+  vim.g.neovide_underline_stroke_scale = 2.0
+
+  vim.keymap.set({ "n", "i", "v" }, "<D-v>", function()
+    vim.api.nvim_paste(vim.fn.getreg "+", true, -1)
+  end)
+end
+
 -- Options =============================================================== {{{1
 
 vim.diagnostic.config {
@@ -124,6 +135,7 @@ vim.pack.add {
 }
 
 require("catppuccin").setup {
+  term_colors = true,
   lsp_styles = {
     underlines = {
       errors = { "undercurl" },
