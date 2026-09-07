@@ -121,8 +121,23 @@ vim.keymap.set("n", "<C-d>", "<C-d>zz")
 vim.keymap.set("n", "n", "nzzzv")
 vim.keymap.set("n", "N", "Nzzzv")
 
+-- Convenient window navigation.
+vim.keymap.set("n", "<C-j>", "<C-w><C-j>")
+vim.keymap.set("n", "<C-k>", "<C-w><C-k>")
+vim.keymap.set("n", "<C-l>", "<C-w><C-l>")
+vim.keymap.set("n", "<C-h>", "<C-w><C-h>")
+
 vim.keymap.set("n", "<C-n>", "<Cmd>cnext<CR>zz")
 vim.keymap.set("n", "<C-p>", "<Cmd>cprev<CR>zz")
+
+vim.keymap.set("n", "<Leader>tt", "<Cmd>tab term<CR>")
+vim.keymap.set("n", "<Leader>tv", "<Cmd>vert term<CR>")
+
+for i = 1, 5 do
+  vim.keymap.set({ "n", "t" }, "<C-" .. i .. ">", function()
+    vim.cmd.tabnext(i)
+  end)
+end
 
 -- }}}1 // Keymaps
 

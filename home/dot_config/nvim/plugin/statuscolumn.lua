@@ -16,8 +16,12 @@ local function highlight(text, group)
 end
 
 function _G.StatusColumn()
-  local row = vim.v.lnum - 1 -- The extmark API is 0-based
   local buffer = vim.api.nvim_win_get_buf(vim.g.statusline_winid)
+  if vim.bo[buffer].buftype == "terminal" then
+    return ""
+  end
+
+  local row = vim.v.lnum - 1 -- The extmark API is 0-based
   local number = vim.v.virtnum == 0 and tostring(vim.v.lnum) or ""
   local marks = vim.api.nvim_buf_get_extmarks(buffer, -1, { row, 0 }, { row, -1 }, { details = true, type = "sign" })
   local sign, git = "", ""
