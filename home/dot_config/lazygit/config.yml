@@ -1,0 +1,12 @@
+gui:
+  showCommandLog: false
+
+git:
+  log:
+    showGraph: when-maximised
+
+os:
+  editPreset: nvim-remote
+
+services:
+  'axis.com': 'github:github.com'
